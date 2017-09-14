@@ -1,7 +1,7 @@
 
 
 
-# example of reading temperate and humidity from a DHT device
+# example of reading temperature and humidity from a DHT device
 # and displaying results to the serial port and a 8 digit 7-segment display
 import time
 import dht

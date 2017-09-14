@@ -10,7 +10,7 @@ Introduction
     :target: https://gitter.im/adafruit/circuitpython?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge
     :alt: Gitter
 
-TODO
+CircuitPython support for the DHT11 and DHT22 temperature and humidity devices.
 
 Dependencies
 =============
@@ -38,7 +38,7 @@ Of course, you must import the library to use it:
 
 The DHT type devices use single data wire, so import the board pin
 
-.. code::python
+.. code:: python
 
     from board import <pin>
 
@@ -60,13 +60,13 @@ Read temperature and humidity
 First you must request data from the device by calling method measure(). 
 If success is equal to 0 then data is ready
 
-.. code::python
+.. code:: python
 
     success = device.measure()
 
 Get the temperure value and the humidity value
 
-.. code::python
+.. code:: python
 
     temperature = device.temperature
     humidity = device.humidity
