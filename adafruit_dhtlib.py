@@ -50,7 +50,7 @@ class dht_base:
         self.trigWait = trigWait
         
 
-    def plsToBinary(self,r, s, l):
+    def pulsesToBinary(self,r, s, l):
         """ PulsesToBinary takes r, a list of transition times, and converts
         them to a 1's or 0's.  The r array contains the transition times.
         r starts with a low transition time followed by a high transistion time.
@@ -134,24 +134,22 @@ class dht_base:
         """       
         success = None
 
-        r = self.getPulses() 
+        ps = self.getPulses() 
         ##print(r)
 
-        if len(r)>=80:
+        if len(ps)>=80:
             bits = array.array('B')
             for b in range(0,80,16):
-                bits.append(self.plsToBinary(r,b,b+16))
+                bits.append(self.pulsesToBinary(ps,b,b+16))
             #print(bits)
             
             # humidity 16 bits
-            hum = 0
             if self.dht11:
                 self.hum = bits[0]
             else:
                 self.hum = ((bits[0]<<8) | bits[1]) / 10
         
             # tempature 16 bits
-            self.temp = 0
             if self.dht11:
                 self.temp = bits[2]
             else:
@@ -163,7 +161,7 @@ class dht_base:
                 ckSum += b
 
             if ckSum & 0xff == bits[4]:
-                #checksum matches
+                # checksum matches
                 # report temp and humidity
                 success = 0
                 #print("Temp: {} C Humidity: {}% ".format(temp, hum))

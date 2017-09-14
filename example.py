@@ -3,8 +3,9 @@
 
 # example of reading temperature and humidity from a DHT device
 # and displaying results to the serial port and a 8 digit 7-segment display
+# the DHT device data wire is connected to board.D2
 import time
-import dht
+import adafruit_dhtlib
 from board import D2
 
 from  adafruit_max7219 import bcddigits
@@ -20,19 +21,19 @@ display = bcddigits.BCDDigits(spi, cs, nDigits=8)
 display.brightness(5)
 
 #initial the dht device
-device = dht.DHT22(D2)
+dhtDevice = adafruit_dhtlib.DHT22(D2)
 
 while True:
     # call measure() and hope for the best
-    success = device.measure()
+    success = dhtDevice.measure()
 
     if success == 0:
         # show the values to the serial port
-        print("Temp: {:.1f} F Humidity: {}% ".format(device.temperature*9/5+32, device.humidity))
+        print("Temp: {:.1f} F Humidity: {}% ".format(dhtDevice.temperature*9/5+32, dhtDevice.humidity))
 
         # now show the values on the 8 digit 7-segment display
         display.clear_all()
-        display.show_str(0,'{:5.1f}{:5.1f}'.format(device.temperature*9/5+32,device.humidity))
+        display.show_str(0,'{:5.1f}{:5.1f}'.format(dhtDevice.temperature*9/5+32,dhtDevice.humidity))
         display.show()
     elif success == -1:
         print("The data checksum did not validate.  Try again.")

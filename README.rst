@@ -45,19 +45,19 @@ The DHT type devices use single data wire, so import the board pin
 
 .. code:: python
 
-    from board import *pin
+    from board import <pin>
 
 Now, to initialize the DHT11 device:
 
 .. code:: python
 
-    dhtDevice = dht.DHT11(*pin)
+    dhtDevice = dht.DHT11(<pin>)
 
 OR initialize the DHT22 device:
 
 .. code:: python
 
-    dhtDevice = dht.DHT22(*pin)
+    dhtDevice = dht.DHT22(<pin>)
 
 Read temperature and humidity
 ----------------------------
