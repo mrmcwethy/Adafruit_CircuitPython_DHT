@@ -21,9 +21,9 @@
 # THE SOFTWARE.
 """
 :mod:`adafruit_dhtlib`
-====================================================
+======================
 
-TODO(description)
+CircuitPython support for the DHT11 and DHT22 temperature and humidity devices.
 
 * Author(s): Mike McWethy
 """
