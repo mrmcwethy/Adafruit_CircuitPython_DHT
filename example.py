@@ -1,9 +1,9 @@
 
 
 
-# example of reading temperature and humidity from a DHT device
-# and displaying results to the serial port and a 8 digit 7-segment display
-# the DHT device data wire is connected to board.D2
+# Example of reading temperature and humidity from a DHT device
+# Display data on a 8 digit 7-segment display as well as printing the  results
+# The DHT device data-wire is connected to board.D2
 import time
 import adafruit_dhtlib
 from board import D2

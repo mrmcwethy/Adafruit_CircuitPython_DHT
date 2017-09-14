@@ -63,7 +63,7 @@ Read temperature and humidity
 ----------------------------
 
 First you must request data from the device by calling measure(). 
-If measure() return 0 then the sensor data is ready
+If measure() returns 0, the sensor data is ready!
 
 .. code:: python
 
