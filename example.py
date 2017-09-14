@@ -18,14 +18,19 @@ cs = digitalio.DigitalInOut(A2)
 spi = busio.SPI(clk, MOSI=din)
 display = bcddigits.BCDDigits(spi, cs, nDigits=8)
 display.brightness(5)
-print(D2)
+
+#initial the dht device
 device = dht.DHT22(D2)
 
 while True:
+    # call measure() and hope for the best
     success = device.measure()
 
     if success == 0:
+        # show the values to the serial port
         print("Temp: {:.1f} F Humidity: {}% ".format(device.temperature*9/5+32, device.humidity))
+
+        # now show the values on the 8 digit 7-segment display
         display.clear_all()
         display.show_str(0,'{:5.1f}{:5.1f}'.format(device.temperature*9/5+32,device.humidity))
         display.show()
@@ -39,7 +44,7 @@ while True:
     if success == 0:
         time.sleep(2.0) 
     else:
-        time.sleep(0.4)
+        time.sleep(0.5)
 
 
 

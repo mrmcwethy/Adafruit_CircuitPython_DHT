@@ -25,6 +25,13 @@ This is easily achieved by downloading
 Usage Example
 =============
 
+Hardware Set-up
+---------------
+
+The DHT11 and DHT22 devices both need a pull-resistor on the data signal wire.  
+This resistor is in the range of 1k to 5k.  Please check your device datasheet for the 
+appropriate value.
+
 Basics
 ------
 
@@ -38,19 +45,19 @@ The DHT type devices use single data wire, so import the board pin
 
 .. code:: python
 
-    from board import <pin>
+    from board import *pin
 
 Now, to initialize the DHT11 device:
 
 .. code:: python
 
-    dhtDevice = dht.DHT11(<pin>)
+    dhtDevice = dht.DHT11(*pin)
 
 OR initialize the DHT22 device:
 
 .. code:: python
 
-    dhtDevice = dht.DHT22(<pin>)
+    dhtDevice = dht.DHT22(*pin)
 
 Read temperature and humidity
 ----------------------------
@@ -69,9 +76,9 @@ Now get the temperature value and the humidity value
     temperature = dhtDevice.temperature
     humidity = dhtDevice.humidity
 
-If the measure() method returns something other than 0, retry calling measure()
-after a 1/2 seconds.  Note the temperature and humidity number are not valid after
-the measure() method return something other than 0.
+If the measure() returns something other than 0, retry calling measure()
+after 1/2 second.  Note that temperature and humidity values are not valid after
+measure() returns something other than 0.
 
 Contributing
 ============
