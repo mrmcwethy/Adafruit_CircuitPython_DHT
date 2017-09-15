@@ -62,23 +62,15 @@ OR initialize the DHT22 device:
 Read temperature and humidity
 ----------------------------
 
-First you must request data from the device by calling measure(). 
-If measure() returns 0, the sensor data is ready!
-
-.. code:: python
-
-    success = dhtDevice.measure()
-
-Now get the temperature value and the humidity value
+Now get the temperature and humidity values
 
 .. code:: python
 
     temperature = dhtDevice.temperature
     humidity = dhtDevice.humidity
 
-If the measure() returns something other than 0, retry calling measure()
-after 1/2 second.  Note that temperature and humidity values are not valid after
-measure() returns something other than 0.
+These properties may raise an exception if a problem occurs.  You should use try/raise 
+logic and catch RuntimeError and then retry getting the values after 1/2 second.
 
 Contributing
 ============
