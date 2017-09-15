@@ -41,7 +41,7 @@ class DHTBase:
 
     def __init__(self, dht11, pin, trig_wait):
         """
-        :param boolean dht11: devide type.  ==True DHT11 ==False DHT22
+        :param boolean dht11: True if device is DHT11, otherwise DHT22.
         :param ~board.Pin pin: digital pin used for communication
         :param int trig_wait: length of time to hold trigger in LOW state (microseconds)
         """
@@ -54,7 +54,7 @@ class DHTBase:
 
 
     def _pulses_to_binary(self, pulses, start, stop):
-        """ PulsesToBinary takes pulses, a list of transition times, and converts
+        """Takes pulses, a list of transition times, and converts
         them to a 1's or 0's.  The pulses array contains the transition times.
         pulses starts with a low transition time followed by a high transistion time.
         then a low followed by a high and so on.  The low transition times are
@@ -83,15 +83,10 @@ class DHTBase:
         return binary
 
     def _get_pulses(self):
-        """ _get_pulses implements the commumication protcol for
-        DHT11 and DHT22 type devices.  It send a start signal
+        """ _get_pulses implements the communication protcol for
+        DHT11 and DHT22 type devices.  It sends a start signal
         of a specific length and listens and measures the
         return signal lengths.
-
-        pin is a board pin connected to the data pin of the device
-
-        trig_wait is the amount of time to hold the start signal
-        in the low state.  This value varies based on the devide type.
 
         return pulses (array.array uint16) contains alternating high and low
         transition times starting with a low transition time.  Normally
@@ -142,30 +137,30 @@ class DHTBase:
             ##print(pulses)
 
             if len(pulses) >= 80:
-                bites = array.array('B')
+                buf = array.array('B')
                 for byte_start in range(0, 80, 16):
-                    bites.append(self._pulses_to_binary(pulses, byte_start, byte_start+16))
+                    buf.append(self._pulses_to_binary(pulses, byte_start, byte_start+16))
                 #print(bites)
 
-                # humidity is 2 bites
+                # humidity is 2 bytes
                 if self._dht11:
-                    self._humidity = bites[0]
+                    self._humidity = buf[0]
                 else:
-                    self._humidity = ((bites[0]<<8) | bites[1]) / 10
+                    self._humidity = ((buf[0]<<8) | buf[1]) / 10
 
-                # tempature is 2 bites
+                # tempature is 2 bytes
                 if self._dht11:
-                    self._temperature = bites[2]
+                    self._temperature = buf[2]
                 else:
-                    self._temperature = ((bites[2]<<8) | bites[3]) / 10
+                    self._temperature = ((buf[2]<<8) | buf[3]) / 10
 
                 # calc checksum
                 chk_sum = 0
-                for bite in bites[0:4]:
-                    chk_sum += bite
+                for b in buf[0:4]:
+                    chk_sum += b
 
                 # checksum is the last byte
-                if chk_sum & 0xff != bites[4]:
+                if chk_sum & 0xff != buf[4]:
                     # check sum failed to validate
                     raise RuntimeError("Checksum did not validate. Try again.")
                     #print("checksum did not match. Temp: {} Humidity: {} Checksum:{}".format(self._temperature,self._humidity,bites[4]))
