@@ -1,13 +1,14 @@
-
-
-
-# Example of reading temperature and humidity from a DHT device
-# Display data on a 8 digit 7-segment display as well as printing the  results
-# The DHT device data-wire is connected to board.D2
+"""
+example of reading temperature and humidity from a DHT device
+and displaying results to the serial port and a 8 digit 7-segment display
+the DHT device data wire is connected to board.D2
+"""
+# import for dht devices
 import time
 import adafruit_dhtlib
 from board import D2
 
+#imports for 7-segment display device
 from  adafruit_max7219 import bcddigits
 from board import TX, RX, A2
 import busio
@@ -24,29 +25,21 @@ display.brightness(5)
 dhtDevice = adafruit_dhtlib.DHT22(D2)
 
 while True:
-    # call measure() and hope for the best
-    success = dhtDevice.measure()
-
-    if success == 0:
+    try:
         # show the values to the serial port
-        print("Temp: {:.1f} F Humidity: {}% ".format(dhtDevice.temperature*9/5+32, dhtDevice.humidity))
+        temperature = dhtDevice.temperature*9/5+32
+        humidity = dhtDevice.humidity
+        #print("Temp: {:.1f} F Humidity: {}% ".format(temperature, humidity))
 
         # now show the values on the 8 digit 7-segment display
         display.clear_all()
-        display.show_str(0,'{:5.1f}{:5.1f}'.format(dhtDevice.temperature*9/5+32,dhtDevice.humidity))
+        display.show_str(0,'{:5.1f}{:5.1f}'.format(temperature, humidity))
         display.show()
-    elif success == -1:
-        print("The data checksum did not validate.  Try again.")
-    elif success == -2:
-        print("The device did not return enough data. Try again.")
-    else:
-        print("Something else bad happened: Error {}".format(success))
 
-    if success == 0:
-        time.sleep(2.0) 
-    else:
+        time.sleep(2.0)
+
+    except RuntimeError as error:
+        print(error.args)
         time.sleep(0.5)
-
-
 
     
