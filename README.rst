@@ -2,8 +2,8 @@
 Introduction
 ============
 
-.. image:: https://readthedocs.org/projects/adafruit-circuitpython-dhtlib/badge/?version=latest
-    :target: https://circuitpython.readthedocs.io/projects/dhtlib/en/latest/
+.. image:: https://readthedocs.org/projects/adafruit-circuitpython-dht/badge/?version=latest
+    :target: https://circuitpython.readthedocs.io/projects/dht/en/latest/
     :alt: Documentation Status
 
 .. image :: https://badges.gitter.im/adafruit/circuitpython.svg
@@ -39,7 +39,7 @@ Of course, you must import the library to use it:
 
 .. code:: python
 
-    import adafruit_dhtlib
+    import adafruit_dht
 
 The DHT type devices use single data wire, so import the board pin
 
@@ -51,13 +51,13 @@ Now, to initialize the DHT11 device:
 
 .. code:: python
 
-    dhtDevice = dht.DHT11(<pin>)
+    dht_device = adafruit_dht.DHT11(<pin>)
 
 OR initialize the DHT22 device:
 
 .. code:: python
 
-    dhtDevice = dht.DHT22(<pin>)
+    dht_device = adafruit_dht.DHT22(<pin>)
 
 Read temperature and humidity
 ----------------------------
@@ -66,8 +66,8 @@ Now get the temperature and humidity values
 
 .. code:: python
 
-    temperature = dhtDevice.temperature
-    humidity = dhtDevice.humidity
+    temperature = dht_device.temperature
+    humidity = dht_device.humidity
 
 These properties may raise an exception if a problem occurs.  You should use try/raise 
 logic and catch RuntimeError and then retry getting the values after 1/2 second.
@@ -76,7 +76,7 @@ Contributing
 ============
 
 Contributions are welcome! Please read our `Code of Conduct
-<https://github.com/adafruit/Adafruit_CircuitPython_dhtlib/blob/master/CODE_OF_CONDUCT.md>`_
+<https://github.com/adafruit/Adafruit_CircuitPython_DHT/blob/master/CODE_OF_CONDUCT.md>`_
 before contributing to help this project stay welcoming.
 
 API Reference
