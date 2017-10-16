@@ -15,7 +15,12 @@ extensions = [
     'sphinx.ext.viewcode',
 ]
 
-intersphinx_mapping = {'python': ('https://docs.python.org/3.4', None),'BusDevice': ('https://circuitpython.readthedocs.io/projects/bus_device/en/latest/', None),'Register': ('https://circuitpython.readthedocs.io/projects/register/en/latest/', None),'CircuitPython': ('https://circuitpython.readthedocs.io/en/latest/', None)}
+intersphinx_mapping = {'python': ('https://docs.python.org/3.4', None),
+                       'BusDevice': ('https://circuitpython.readthedocs.io/projects/bus_device/en/latest/', None),
+                       'Register': ('https://circuitpython.readthedocs.io/projects/register/en/latest/', None),
+                       'CircuitPython': ('https://circuitpython.readthedocs.io/en/latest/', None)}
+
+autodoc_mock_imports = ["pulseio"]
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -26,7 +31,7 @@ source_suffix = '.rst'
 master_doc = 'README'
 
 # General information about the project.
-project = u'Adafruit DHTLIB Library'
+project = u'Adafruit CircuitPython DHT Library'
 copyright = u'2017 Mike McWethy'
 author = u'Mike McWethy'
 
@@ -91,7 +96,7 @@ else:
 html_static_path = ['_static']
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'AdafruitDHTLIBLibrarydoc'
+htmlhelp_basename = 'AdafruitCircuitPythonDHTLibrarydoc'
 
 # -- Options for LaTeX output ---------------------------------------------
 
@@ -117,7 +122,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'AdafruitDHTLIBLibrary.tex', u'Adafruit DHTLIB Library Documentation',
+    (master_doc, 'AdafruitCircuitPythonDHTLibrary.tex', u'Adafruit CircuitPython DHT Library Documentation',
      author, 'manual'),
 ]
 
@@ -126,7 +131,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'adafruitDHTLIBlibrary', u'Adafruit DHTLIB Library Documentation',
+    (master_doc, 'adafruitCircuitPythonDHTlibrary', u'Adafruit CircuitPython DHT Library Documentation',
      [author], 1)
 ]
 
@@ -136,7 +141,7 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'AdafruitDHTLIBLibrary', u'Adafruit DHTLIB Library Documentation',
-     author, 'AdafruitDHTLIBLibrary', 'One line description of project.',
+    (master_doc, 'AdafruitCircuitPythonDHTLibrary', u'Adafruit CircuitPython DHT Library Documentation',
+     author, 'AdafruitCircuitPythonDHTLibrary', 'One line description of project.',
      'Miscellaneous'),
 ]
