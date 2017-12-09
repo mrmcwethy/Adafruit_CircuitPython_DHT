@@ -34,8 +34,11 @@ try:
     import pulseio
 except ImportError as excpt:
     print("adafruit_dht requires the pulseio library, but it failed to load."+
-        "  Note that CircuitPython does not support pulseio on all boards.")
+          "  Note that CircuitPython does not support pulseio on all boards.")
     raise excpt
+
+__version__ = "0.0.0-auto.0"
+__repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_DHT.git"
 
 class DHTBase:
     """ base support for DHT11 and DHT22 devices
@@ -120,7 +123,7 @@ class DHTBase:
                     break
 
             pulse_in.pause()
-            while len(pulse_in):
+            while pulse_in:
                 pulses.append(pulse_in.popleft())
             pulse_in.resume()
 
@@ -167,7 +170,8 @@ class DHTBase:
                 if chk_sum & 0xff != buf[4]:
                     # check sum failed to validate
                     raise RuntimeError("Checksum did not validate. Try again.")
-                    #print("checksum did not match. Temp: {} Humidity: {} Checksum:{}".format(self._temperature,self._humidity,bites[4]))
+                    #print("checksum did not match. Temp: {} Humidity: {} Checksum:{}"
+                    #.format(self._temperature,self._humidity,bites[4]))
 
                 # checksum matches
                 #print("Temp: {} C Humidity: {}% ".format(self._temperature, self._humidity))
