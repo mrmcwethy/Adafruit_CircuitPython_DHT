@@ -37,6 +37,9 @@ except ImportError as excpt:
           "  Note that CircuitPython does not support pulseio on all boards.")
     raise excpt
 
+__version__ = "0.0.0-auto.0"
+__repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_DHT.git"
+
 class DHTBase:
     """ base support for DHT11 and DHT22 devices
     """
