@@ -24,17 +24,17 @@ This is easily achieved by downloading
 `the Adafruit library and driver bundle <https://github.com/adafruit/Adafruit_CircuitPython_Bundle>`_.
 
 Usage Example
-=============
+==============
 
 Hardware Set-up
----------------
+----------------
 
 The DHT11 and DHT22 devices both need a pull-resistor on the data signal wire.  
 This resistor is in the range of 1k to 5k.  Please check your device datasheet for the 
 appropriate value.
 
 Basics
-------
+-------
 
 Of course, you must import the library to use it:
 
@@ -61,7 +61,7 @@ OR initialize the DHT22 device:
     dht_device = adafruit_dht.DHT22(<pin>)
 
 Read temperature and humidity
-----------------------------
+------------------------------
 
 Now get the temperature and humidity values
 
