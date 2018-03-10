@@ -11,6 +11,10 @@ Introduction
     :target: https://discord.gg/nBQh6qu
     :alt: Discord
 
+.. image:: https://travis-ci.org/adafruit/Adafruit_CircuitPython_DHT.svg?branch=master
+    :target: https://travis-ci.org/adafruit/Adafruit_CircuitPython_DHT
+    :alt: Build Status
+
 CircuitPython support for the DHT11 and DHT22 temperature and humidity devices.
 
 Dependencies
