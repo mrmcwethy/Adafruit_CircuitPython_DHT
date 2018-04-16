@@ -139,7 +139,7 @@ class DHTBase:
             data returned from the device (try again)
         """
         delay_between_readings = 0.5
-        if self._dht11 :
+        if self._dht11:
             delay_between_readings = 1.0
         if time.monotonic()-self._last_called > delay_between_readings:
             self._last_called = time.monotonic()
