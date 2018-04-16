@@ -100,7 +100,6 @@ class DHTBase:
         pulses will have 81 elements for the DHT11/22 type devices.
         """
         pulses = array.array('H')
-        tmono = time.monotonic()
 
         # create the PulseIn object using context manager
         with pulseio.PulseIn(self._pin, 81, True) as pulse_in:
@@ -115,13 +114,15 @@ class DHTBase:
             pulse_in.resume(self._trig_wait)
 
             # loop until we get the return pulse we need or
-            # time out after 1/2 seconds
+            # time out after 1/4 second
+            tmono = time.monotonic()
             while True:
-                if len(pulse_in) >= 80:
-                    break
-                if time.monotonic()-tmono > 0.5: # time out after 1/2 seconds
+                #if len(pulse_in) >= 82:
+                #    break
+                if time.monotonic()-tmono > 0.25: # time out after 1/4 seconds
                     break
 
+            #print(len(pulse_in))
             pulse_in.pause()
             while pulse_in:
                 pulses.append(pulse_in.popleft())
@@ -137,11 +138,15 @@ class DHTBase:
             Raises RuntimeError exception for checksum failure and for insuffcient
             data returned from the device (try again)
         """
-        if time.monotonic()-self._last_called > 0.5:
+        delay_between_readings = 0.5
+        if(self._dht11):
+            delay_between_readings = 1.0
+        if time.monotonic()-self._last_called > delay_between_readings:
             self._last_called = time.monotonic()
 
             pulses = self._get_pulses()
-            ##print(pulses)
+            #print(pulses)
+            #print(len(pulses))
 
             if len(pulses) >= 80:
                 buf = array.array('B')
@@ -169,6 +174,7 @@ class DHTBase:
                 # checksum is the last byte
                 if chk_sum & 0xff != buf[4]:
                     # check sum failed to validate
+                    #print(pulses)
                     raise RuntimeError("Checksum did not validate. Try again.")
                     #print("checksum did not match. Temp: {} Humidity: {} Checksum:{}"
                     #.format(self._temperature,self._humidity,bites[4]))
