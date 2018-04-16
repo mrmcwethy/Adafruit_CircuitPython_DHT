@@ -117,12 +117,9 @@ class DHTBase:
             # time out after 1/4 second
             tmono = time.monotonic()
             while True:
-                #if len(pulse_in) >= 82:
-                #    break
                 if time.monotonic()-tmono > 0.25: # time out after 1/4 seconds
                     break
 
-            #print(len(pulse_in))
             pulse_in.pause()
             while pulse_in:
                 pulses.append(pulse_in.popleft())
@@ -145,14 +142,11 @@ class DHTBase:
             self._last_called = time.monotonic()
 
             pulses = self._get_pulses()
-            #print(pulses)
-            #print(len(pulses))
 
             if len(pulses) >= 80:
                 buf = array.array('B')
                 for byte_start in range(0, 80, 16):
                     buf.append(self._pulses_to_binary(pulses, byte_start, byte_start+16))
-                #print(buf)
 
                 # humidity is 2 bytes
                 if self._dht11:
@@ -160,7 +154,7 @@ class DHTBase:
                 else:
                     self._humidity = ((buf[0]<<8) | buf[1]) / 10
 
-                # tempature is 2 bytes
+                # temperature is 2 bytes
                 if self._dht11:
                     self._temperature = buf[2]
                 else:
@@ -174,17 +168,11 @@ class DHTBase:
                 # checksum is the last byte
                 if chk_sum & 0xff != buf[4]:
                     # check sum failed to validate
-                    #print(pulses)
                     raise RuntimeError("Checksum did not validate. Try again.")
-                    #print("checksum did not match. Temp: {} Humidity: {} Checksum:{}"
-                    #.format(self._temperature,self._humidity,bites[4]))
 
-                # checksum matches
-                #print("Temp: {} C Humidity: {}% ".format(self._temperature, self._humidity))
 
             else:
                 raise RuntimeError("A full buffer was not returned.  Try again.")
-                #print("did not get a full return.  number returned was: {}".format(len(r)))
 
     @property
     def temperature(self):
