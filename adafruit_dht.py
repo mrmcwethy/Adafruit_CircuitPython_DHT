@@ -148,17 +148,23 @@ class DHTBase:
                 for byte_start in range(0, 80, 16):
                     buf.append(self._pulses_to_binary(pulses, byte_start, byte_start+16))
 
-                # humidity is 2 bytes
                 if self._dht11:
+                    # humidity is 1 byte
                     self._humidity = buf[0]
                 else:
+                    # humidity is 2 bytes
                     self._humidity = ((buf[0]<<8) | buf[1]) / 10
 
-                # temperature is 2 bytes
                 if self._dht11:
+                    # temperature is 1 byte
                     self._temperature = buf[2]
                 else:
-                    self._temperature = ((buf[2]<<8) | buf[3]) / 10
+                    # temperature is 2 bytes
+                    # MSB ist sign, bits 0-14 are magnitude)
+                    self._temperature = (((buf[2] & 0x7f)<<8) | buf[3]) / 10
+                    # set sign
+                    if buf[2] & 0x80:
+                        self._temperature = -self.temperature
 
                 # calc checksum
                 chk_sum = 0
