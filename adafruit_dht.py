@@ -164,7 +164,7 @@ class DHTBase:
                     self._temperature = (((buf[2] & 0x7f)<<8) | buf[3]) / 10
                     # set sign
                     if buf[2] & 0x80:
-                        self._temperature = -self.temperature
+                        self._temperature = -self._temperature
 
                 # calc checksum
                 chk_sum = 0
