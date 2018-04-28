@@ -160,12 +160,12 @@ class DHTBase:
                     self._temperature = buf[2]
                 else:
                     # temperature is 2 bytes
-                    # MSB ist sign, bits 0-14 are magnitude)
-                    self._temperature = (((buf[2] & 0x7f)<<8) | buf[3]) / 10
+                    # MSB is sign, bits 0-14 are magnitude)
+                    raw_temperature = (((buf[2] & 0x7f)<<8) | buf[3]) / 10
                     # set sign
                     if buf[2] & 0x80:
-                        self._temperature = -self._temperature
-
+                        raw_temperature = -raw_temperature
+                    self._temperature = raw_temperature
                 # calc checksum
                 chk_sum = 0
                 for b in buf[0:4]:
@@ -175,7 +175,6 @@ class DHTBase:
                 if chk_sum & 0xff != buf[4]:
                     # check sum failed to validate
                     raise RuntimeError("Checksum did not validate. Try again.")
-
 
             else:
                 raise RuntimeError("A full buffer was not returned.  Try again.")
