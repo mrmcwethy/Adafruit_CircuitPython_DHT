@@ -1,31 +1,29 @@
-# This is a common .travis.yml for generating library release zip files for
-# CircuitPython library releases using circuitpython-build-tools.
-# See https://github.com/adafruit/circuitpython-build-tools for detailed setup
-# instructions.
-
 dist: trusty
 sudo: false
 language: python
 python:
-    - "3.6"
-
+- '3.6'
 cache:
-    pip: true
-
+  pip: true
 deploy:
   provider: releases
-  api_key: $GITHUB_TOKEN
+  api_key: "$GITHUB_TOKEN"
   file_glob: true
-  file: $TRAVIS_BUILD_DIR/bundles/*
+  file: "$TRAVIS_BUILD_DIR/bundles/*"
   skip_cleanup: true
   on:
     tags: true
-
+- provider: pypi
+  user: adafruit-travis
+  on:
+    tags: true
+  password:
+    secure: vygpUo9Cn8Jn2LqKP1MXzhlusmEoJLB/OBRbni7sI6V0STk04D6/8y3tCvqxhllhCz9CeGTygW8F97TmsgzjXo/jinEbb2wKpCUUa1m6JuJK3tgvg/VaR3OdTFzkbcphP9W00mQs1tjA3L5Kpnj3J3G8X3/Bmq8JKxbMygCyUfCYqNzxv8DptUye/XCG1vMBrJD+Pd+aSgw/OlWmc8rHrg19p8+boVSouOgI/fVFSGCc78iDly6Uzk0nlDtBwh2XH/2AhhgoxLGQZbwblFzJ/kV/NdVdp9BWD1xsY7+2Pi/yN7/7Xk+/ffpYKnGxA6gRcIbjAd6QJxmmJySnz4INABjSiohs1iI5zhqjiQeGevsmGQJx/mcNxExie+DVtjWjkbwEB/ayWDiLrphtVrN2hFzBznlkEPNp+eVECRe1bUnsRJf5rzLs/4VRP+XN4pYjXBFo8Dd/QpjiB8rC579c3IS/frdamC0Za1muHmWw4mXzhCt1gGJznewGBraFM7YRIk/5LeRgJxbLih66glmppHYnoDUkMd7jzcw46OMzmTzJGTXk17mHA/bTKaCUQYjBLOQ9PizJq3nZxan08A7cXOcepNrpodyorpn4sDujYbv3LyLCxe1nswjGknoTDojb+sFO6Yq/LnZyitx6uwv5Lkj3U0qvOj8DQLtkyKS6xIo=
 install:
-  - pip install pylint circuitpython-build-tools Sphinx sphinx-rtd-theme
-
+- pip install -r requirements.txt
+- pip install pylint circuitpython-build-tools Sphinx sphinx-rtd-theme
 script:
-  - pylint adafruit_dht.py
-  - ([[ ! -d "examples" ]] || pylint --disable=missing-docstring,invalid-name examples/*.py)
-  - circuitpython-build-bundles --filename_prefix adafruit-circuitpython-dht --library_location .
-  - cd docs && sphinx-build -E -W -b html . _build/html
+- pylint adafruit_dht.py
+- ([[ ! -d "examples" ]] || pylint --disable=missing-docstring,invalid-name examples/*.py)
+- circuitpython-build-bundles --filename_prefix adafruit-circuitpython-dht --library_location .
+- cd docs && sphinx-build -E -W -b html . _build/html && cd ..

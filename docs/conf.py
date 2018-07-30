@@ -20,8 +20,6 @@ intersphinx_mapping = {'python': ('https://docs.python.org/3.4', None),
                        'Register': ('https://circuitpython.readthedocs.io/projects/register/en/latest/', None),
                        'CircuitPython': ('https://circuitpython.readthedocs.io/en/latest/', None)}
 
-autodoc_mock_imports = ["pulseio"]
-
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
 
