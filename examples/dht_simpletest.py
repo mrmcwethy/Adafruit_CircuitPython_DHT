@@ -1,6 +1,6 @@
 import time
-import adafruit_dht
 from board import D2
+import adafruit_dht
 
 #initial the dht device
 dhtDevice = adafruit_dht.DHT22(D2)
