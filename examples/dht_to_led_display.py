@@ -6,10 +6,10 @@ the DHT device data wire is connected to board.D2
 # import for dht devices and 7-segment display devices
 import time
 from board import D2, TX, RX, D1
-import adafruit_dht
-from adafruit_max7219 import bcddigits
 import busio
 import digitalio
+import adafruit_dht
+from adafruit_max7219 import bcddigits
 
 
 clk = RX
