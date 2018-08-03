@@ -5,16 +5,16 @@ the DHT device data wire is connected to board.D2
 """
 # import for dht devices and 7-segment display devices
 import time
-import adafruit_dht
-from  adafruit_max7219 import bcddigits
+from board import D2, TX, RX, D1
 import busio
 import digitalio
+import adafruit_dht
+from adafruit_max7219 import bcddigits
 
-from board import D2, TX, RX, A2
 
 clk = RX
 din = TX
-cs = digitalio.DigitalInOut(A2)
+cs = digitalio.DigitalInOut(D1)
 spi = busio.SPI(clk, MOSI=din)
 display = bcddigits.BCDDigits(spi, cs, nDigits=8)
 display.brightness(5)
