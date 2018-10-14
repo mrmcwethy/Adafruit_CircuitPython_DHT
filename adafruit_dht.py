@@ -138,7 +138,8 @@ class DHTBase:
         delay_between_readings = 0.5
         if self._dht11:
             delay_between_readings = 1.0
-        if (self._last_called == 0) or (time.monotonic()-self._last_called > delay_between_readings):
+        if (self._last_called == 0) or \
+            (time.monotonic()-self._last_called > delay_between_readings):
             self._last_called = time.monotonic()
 
             pulses = self._get_pulses()
