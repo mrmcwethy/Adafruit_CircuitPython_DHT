@@ -138,7 +138,7 @@ class DHTBase:
         delay_between_readings = 0.5
         if self._dht11:
             delay_between_readings = 1.0
-        # Initialte new reading if this is the first call or if sufficient delay
+        # Initiate new reading if this is the first call or if sufficient delay
         # If delay not sufficient - return previous reading.
         # This allows back to back access for temperature and humidity for same reading
         if (self._last_called == 0 or
