@@ -145,7 +145,9 @@ class DHTBase:
                         dhtval = not dhtval  # we toggled
                         transitions.append(time.monotonic()) # save the timestamp
                 # convert transtions to microsecond delta pulses:
-                for i in range(1, len(transitions)):
+                # use last 81 pulses
+                transition_start = max(1, len(transitions) - 81)
+                for i in range(transition_start, len(transitions)):
                     pulses_micro_sec = int(1000000 * (transitions[i] - transitions[i-1]))
                     pulses.append(min(pulses_micro_sec, 65535))
         return pulses
