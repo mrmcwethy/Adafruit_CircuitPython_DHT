@@ -140,7 +140,7 @@ class DHTBase:
                 dhtval = True   # start with dht pin true because its pulled up
                 dhtpin.direction = Direction.INPUT
                 dhtpin.pull = Pull.UP
-                while time.monotonic() - timestamp < 0.1:
+                while time.monotonic() - timestamp < 0.25:
                     if dhtval != dhtpin.value:
                         dhtval = not dhtval  # we toggled
                         transitions.append(time.monotonic()) # save the timestamp
