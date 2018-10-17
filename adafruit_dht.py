@@ -120,7 +120,7 @@ class DHTBase:
                 # time out after 1/4 second
                 tmono = time.monotonic()
                 while time.monotonic() - tmono < 0.25:
-                        pass # time out after 1/4 seconds
+                    pass # time out after 1/4 seconds
                 pulse_in.pause()
                 while pulse_in:
                     pulses.append(pulse_in.popleft())
