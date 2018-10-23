@@ -30,12 +30,14 @@ CircuitPython support for the DHT11 and DHT22 temperature and humidity devices.
 
 import array
 import time
+from digitalio import DigitalInOut, Pull, Direction
+_USE_PULSEIO = False
 try:
     import pulseio
-except ImportError as excpt:
-    print("adafruit_dht requires the pulseio library, but it failed to load."+
-          "  Note that CircuitPython does not support pulseio on all boards.")
-    raise excpt
+    _USE_PULSEIO = True
+except ImportError:
+    pass   # This is OK, we'll try to bitbang it!
+
 
 __version__ = "0.0.0-auto.0"
 __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_DHT.git"
@@ -89,7 +91,7 @@ class DHTBase:
 
         return binary
 
-    def _get_pulses(self):
+    def _get_pulses_pulseio(self):
         """ _get_pulses implements the communication protcol for
         DHT11 and DHT22 type devices.  It sends a start signal
         of a specific length and listens and measures the
@@ -100,10 +102,8 @@ class DHTBase:
         pulses will have 81 elements for the DHT11/22 type devices.
         """
         pulses = array.array('H')
-
         # create the PulseIn object using context manager
         with pulseio.PulseIn(self._pin, 81, True) as pulse_in:
-
             # The DHT type device use a specialize 1-wire protocol
             # The microprocessor first sends a LOW signal for a
             # specific length of time.  Then the device sends back a
@@ -112,19 +112,51 @@ class DHTBase:
             pulse_in.pause()
             pulse_in.clear()
             pulse_in.resume(self._trig_wait)
-
             # loop until we get the return pulse we need or
             # time out after 1/4 second
             tmono = time.monotonic()
-            while True:
-                if time.monotonic()-tmono > 0.25: # time out after 1/4 seconds
-                    break
-
+            while time.monotonic() - tmono < 0.25:
+                pass # time out after 1/4 seconds
             pulse_in.pause()
             while pulse_in:
                 pulses.append(pulse_in.popleft())
             pulse_in.resume()
+        return pulses
 
+    def _get_pulses_bitbang(self):
+        """ _get_pulses implements the communication protcol for
+        DHT11 and DHT22 type devices.  It sends a start signal
+        of a specific length and listens and measures the
+        return signal lengths.
+
+        return pulses (array.array uint16) contains alternating high and low
+        transition times starting with a low transition time.  Normally
+        pulses will have 81 elements for the DHT11/22 type devices.
+        """
+        pulses = array.array('H')
+        with DigitalInOut(self._pin) as dhtpin:
+            # we will bitbang if no pulsein capability
+            transitions = []
+            # Signal by setting pin high, then low, and releasing
+            dhtpin.direction = Direction.OUTPUT
+            dhtpin.value = True
+            time.sleep(0.1)
+            dhtpin.value = False
+            time.sleep(0.001)
+            timestamp = time.monotonic() # take timestamp
+            dhtval = True   # start with dht pin true because its pulled up
+            dhtpin.direction = Direction.INPUT
+            dhtpin.pull = Pull.UP
+            while time.monotonic() - timestamp < 0.25:
+                if dhtval != dhtpin.value:
+                    dhtval = not dhtval  # we toggled
+                    transitions.append(time.monotonic()) # save the timestamp
+            # convert transtions to microsecond delta pulses:
+            # use last 81 pulses
+            transition_start = max(1, len(transitions) - 81)
+            for i in range(transition_start, len(transitions)):
+                pulses_micro_sec = int(1000000 * (transitions[i] - transitions[i-1]))
+                pulses.append(min(pulses_micro_sec, 65535))
         return pulses
 
     def measure(self):
@@ -135,9 +167,7 @@ class DHTBase:
             Raises RuntimeError exception for checksum failure and for insuffcient
             data returned from the device (try again)
         """
-        delay_between_readings = 0.5
-        if self._dht11:
-            delay_between_readings = 1.0
+        delay_between_readings = 2  # 2 seconds per read according to datasheet
         # Initiate new reading if this is the first call or if sufficient delay
         # If delay not sufficient - return previous reading.
         # This allows back to back access for temperature and humidity for same reading
@@ -145,7 +175,11 @@ class DHTBase:
                 (time.monotonic()-self._last_called) > delay_between_readings):
             self._last_called = time.monotonic()
 
-            pulses = self._get_pulses()
+            if _USE_PULSEIO:
+                pulses = self._get_pulses_pulseio()
+            else:
+                pulses = self._get_pulses_bitbang()
+            #print(len(pulses), "pulses:", [x for x in pulses])
 
             if len(pulses) >= 80:
                 buf = array.array('B')
@@ -155,14 +189,11 @@ class DHTBase:
                 if self._dht11:
                     # humidity is 1 byte
                     self._humidity = buf[0]
-                else:
-                    # humidity is 2 bytes
-                    self._humidity = ((buf[0]<<8) | buf[1]) / 10
-
-                if self._dht11:
                     # temperature is 1 byte
                     self._temperature = buf[2]
                 else:
+                    # humidity is 2 bytes
+                    self._humidity = ((buf[0]<<8) | buf[1]) / 10
                     # temperature is 2 bytes
                     # MSB is sign, bits 0-14 are magnitude)
                     raw_temperature = (((buf[2] & 0x7f)<<8) | buf[3]) / 10
@@ -180,9 +211,12 @@ class DHTBase:
                     # check sum failed to validate
                     raise RuntimeError("Checksum did not validate. Try again.")
 
-            else:
+            elif len(pulses) >= 10:
+                # We got *some* data just not 81 bits
                 raise RuntimeError("A full buffer was not returned.  Try again.")
-
+            else:
+                # Probably a connection issue!
+                raise RuntimeError("DHT sensor not found, check wiring")
     @property
     def temperature(self):
         """ temperature current reading.  It makes sure a reading is available
