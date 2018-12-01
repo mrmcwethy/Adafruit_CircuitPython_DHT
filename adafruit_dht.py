@@ -106,21 +106,21 @@ class DHTBase:
         """
         pulses = array.array('H')
         if _USE_PULSEIO:
-                # The DHT type device use a specialize 1-wire protocol
-                # The microprocessor first sends a LOW signal for a
-                # specific length of time.  Then the device sends back a
-                # series HIGH and LOW signals.  The length the HIGH signals
-                # represents the device values.
-                self.pulse_in.pause()
-                self.pulse_in.clear()
-                self.pulse_in.resume(self._trig_wait)
+            # The DHT type device use a specialize 1-wire protocol
+            # The microprocessor first sends a LOW signal for a
+            # specific length of time.  Then the device sends back a
+            # series HIGH and LOW signals.  The length the HIGH signals
+            # represents the device values.
+            self.pulse_in.pause()
+            self.pulse_in.clear()
+            self.pulse_in.resume(self._trig_wait)
 
-                # loop until we get the return pulse we need or
-                # time out after 1/4 second
-                time.sleep(0.25)
-                self.pulse_in.pause()
-                while self.pulse_in:
-                    pulses.append(self.pulse_in.popleft())
+            # loop until we get the return pulse we need or
+            # time out after 1/4 second
+            time.sleep(0.25)
+            self.pulse_in.pause()
+            while self.pulse_in:
+                pulses.append(self.pulse_in.popleft())
         return pulses
 
     def _get_pulses_bitbang(self):
