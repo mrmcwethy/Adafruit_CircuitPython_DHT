@@ -60,7 +60,10 @@ class DHTBase:
         self._last_called = 0
         self._humidity = None
         self._temperature = None
-
+        # We don't use a context because linux-based systems are sluggish
+        # and we're better off having a running process
+        if _USE_PULSEIO:
+            self.pulse_in = pulseio.PulseIn(self._pin, 81, True)
 
     def _pulses_to_binary(self, pulses, start, stop):
         """Takes pulses, a list of transition times, and converts
@@ -102,25 +105,22 @@ class DHTBase:
         pulses will have 81 elements for the DHT11/22 type devices.
         """
         pulses = array.array('H')
-        # create the PulseIn object using context manager
-        with pulseio.PulseIn(self._pin, 81, True) as pulse_in:
+        if _USE_PULSEIO:
             # The DHT type device use a specialize 1-wire protocol
             # The microprocessor first sends a LOW signal for a
             # specific length of time.  Then the device sends back a
             # series HIGH and LOW signals.  The length the HIGH signals
             # represents the device values.
-            pulse_in.pause()
-            pulse_in.clear()
-            pulse_in.resume(self._trig_wait)
+            self.pulse_in.pause()
+            self.pulse_in.clear()
+            self.pulse_in.resume(self._trig_wait)
+
             # loop until we get the return pulse we need or
             # time out after 1/4 second
-            tmono = time.monotonic()
-            while time.monotonic() - tmono < 0.25:
-                pass # time out after 1/4 seconds
-            pulse_in.pause()
-            while pulse_in:
-                pulses.append(pulse_in.popleft())
-            pulse_in.resume()
+            time.sleep(0.25)
+            self.pulse_in.pause()
+            while self.pulse_in:
+                pulses.append(self.pulse_in.popleft())
         return pulses
 
     def _get_pulses_bitbang(self):
