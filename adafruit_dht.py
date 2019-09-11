@@ -33,7 +33,7 @@ import time
 from digitalio import DigitalInOut, Pull, Direction
 _USE_PULSEIO = False
 try:
-    import pulseio
+    from pulseio import PulseIn
     _USE_PULSEIO = True
 except ImportError:
     pass   # This is OK, we'll try to bitbang it!
@@ -63,7 +63,7 @@ class DHTBase:
         # We don't use a context because linux-based systems are sluggish
         # and we're better off having a running process
         if _USE_PULSEIO:
-            self.pulse_in = pulseio.PulseIn(self._pin, 81, True)
+            self.pulse_in = PulseIn(self._pin, 81, True)
 
     def _pulses_to_binary(self, pulses, start, stop):
         """Takes pulses, a list of transition times, and converts
