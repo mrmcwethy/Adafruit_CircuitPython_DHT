@@ -180,6 +180,9 @@ class DHTBase:
         ):
             self._last_called = time.monotonic()
 
+            new_temperature = 0
+            new_humidity = 0
+
             if _USE_PULSEIO:
                 pulses = self._get_pulses_pulseio()
             else:
@@ -195,19 +198,19 @@ class DHTBase:
 
                 if self._dht11:
                     # humidity is 1 byte
-                    self._humidity = buf[0]
+                    new_humidity = buf[0]
                     # temperature is 1 byte
-                    self._temperature = buf[2]
+                    new_temperature = buf[2]
                 else:
                     # humidity is 2 bytes
-                    self._humidity = ((buf[0] << 8) | buf[1]) / 10
+                    new_humidity = ((buf[0] << 8) | buf[1]) / 10
                     # temperature is 2 bytes
                     # MSB is sign, bits 0-14 are magnitude)
                     raw_temperature = (((buf[2] & 0x7F) << 8) | buf[3]) / 10
                     # set sign
                     if buf[2] & 0x80:
                         raw_temperature = -raw_temperature
-                    self._temperature = raw_temperature
+                    new_temperature = raw_temperature
                 # calc checksum
                 chk_sum = 0
                 for b in buf[0:4]:
@@ -220,10 +223,13 @@ class DHTBase:
 
             elif len(pulses) >= 10:
                 # We got *some* data just not 81 bits
-                raise RuntimeError("A full buffer was not returned.  Try again.")
+                raise RuntimeError("A full buffer was not returned. Try again.")
             else:
                 # Probably a connection issue!
                 raise RuntimeError("DHT sensor not found, check wiring")
+
+            self._temperature = new_temperature
+            self._humidity = new_humidity
 
     @property
     def temperature(self):
