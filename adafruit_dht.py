@@ -221,6 +221,10 @@ class DHTBase:
                     # check sum failed to validate
                     raise RuntimeError("Checksum did not validate. Try again.")
 
+                if new_humidity < 0 or new_humidity > 100:
+                    # We received unplausible data
+                    raise RuntimeError("Received unplausible data. Try again.")
+
             elif len(pulses) >= 10:
                 # We got *some* data just not 81 bits
                 raise RuntimeError("A full buffer was not returned. Try again.")
