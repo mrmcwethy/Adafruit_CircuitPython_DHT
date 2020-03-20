@@ -19,7 +19,7 @@ spi = busio.SPI(clk, MOSI=din)
 display = bcddigits.BCDDigits(spi, cs, nDigits=8)
 display.brightness(5)
 
-#initial the dht device
+# initial the dht device
 dhtDevice = adafruit_dht.DHT22(D2)
 
 while True:
@@ -27,11 +27,11 @@ while True:
         # show the values to the serial port
         temperature = dhtDevice.temperature * (9 / 5) + 32
         humidity = dhtDevice.humidity
-        #print("Temp: {:.1f} F Humidity: {}% ".format(temperature, humidity))
+        # print("Temp: {:.1f} F Humidity: {}% ".format(temperature, humidity))
 
         # now show the values on the 8 digit 7-segment display
         display.clear_all()
-        display.show_str(0, '{:5.1f}{:5.1f}'.format(temperature, humidity))
+        display.show_str(0, "{:5.1f}{:5.1f}".format(temperature, humidity))
         display.show()
 
     except RuntimeError as error:

@@ -31,16 +31,19 @@ CircuitPython support for the DHT11 and DHT22 temperature and humidity devices.
 import array
 import time
 from digitalio import DigitalInOut, Pull, Direction
+
 _USE_PULSEIO = False
 try:
     from pulseio import PulseIn
+
     _USE_PULSEIO = True
 except ImportError:
-    pass   # This is OK, we'll try to bitbang it!
+    pass  # This is OK, we'll try to bitbang it!
 
 
 __version__ = "0.0.0-auto.0"
 __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_DHT.git"
+
 
 class DHTBase:
     """ base support for DHT11 and DHT22 devices
@@ -88,7 +91,7 @@ class DHTBase:
                 bit = 0
                 if pulses[bit_inx] > self.__hiLevel:
                     bit = 1
-                binary = binary<<1 | bit
+                binary = binary << 1 | bit
 
             hi_sig = not hi_sig
 
@@ -104,7 +107,7 @@ class DHTBase:
         transition times starting with a low transition time.  Normally
         pulses will have 81 elements for the DHT11/22 type devices.
         """
-        pulses = array.array('H')
+        pulses = array.array("H")
         if _USE_PULSEIO:
             # The DHT type device use a specialize 1-wire protocol
             # The microprocessor first sends a LOW signal for a
@@ -133,7 +136,7 @@ class DHTBase:
         transition times starting with a low transition time.  Normally
         pulses will have 81 elements for the DHT11/22 type devices.
         """
-        pulses = array.array('H')
+        pulses = array.array("H")
         with DigitalInOut(self._pin) as dhtpin:
             # we will bitbang if no pulsein capability
             transitions = []
@@ -143,19 +146,19 @@ class DHTBase:
             time.sleep(0.1)
             dhtpin.value = False
             time.sleep(0.001)
-            timestamp = time.monotonic() # take timestamp
-            dhtval = True   # start with dht pin true because its pulled up
+            timestamp = time.monotonic()  # take timestamp
+            dhtval = True  # start with dht pin true because its pulled up
             dhtpin.direction = Direction.INPUT
             dhtpin.pull = Pull.UP
             while time.monotonic() - timestamp < 0.25:
                 if dhtval != dhtpin.value:
                     dhtval = not dhtval  # we toggled
-                    transitions.append(time.monotonic()) # save the timestamp
+                    transitions.append(time.monotonic())  # save the timestamp
             # convert transtions to microsecond delta pulses:
             # use last 81 pulses
             transition_start = max(1, len(transitions) - 81)
             for i in range(transition_start, len(transitions)):
-                pulses_micro_sec = int(1000000 * (transitions[i] - transitions[i-1]))
+                pulses_micro_sec = int(1000000 * (transitions[i] - transitions[i - 1]))
                 pulses.append(min(pulses_micro_sec, 65535))
         return pulses
 
@@ -171,20 +174,24 @@ class DHTBase:
         # Initiate new reading if this is the first call or if sufficient delay
         # If delay not sufficient - return previous reading.
         # This allows back to back access for temperature and humidity for same reading
-        if (self._last_called == 0 or
-                (time.monotonic()-self._last_called) > delay_between_readings):
+        if (
+            self._last_called == 0
+            or (time.monotonic() - self._last_called) > delay_between_readings
+        ):
             self._last_called = time.monotonic()
 
             if _USE_PULSEIO:
                 pulses = self._get_pulses_pulseio()
             else:
                 pulses = self._get_pulses_bitbang()
-            #print(len(pulses), "pulses:", [x for x in pulses])
+            # print(len(pulses), "pulses:", [x for x in pulses])
 
             if len(pulses) >= 80:
-                buf = array.array('B')
+                buf = array.array("B")
                 for byte_start in range(0, 80, 16):
-                    buf.append(self._pulses_to_binary(pulses, byte_start, byte_start+16))
+                    buf.append(
+                        self._pulses_to_binary(pulses, byte_start, byte_start + 16)
+                    )
 
                 if self._dht11:
                     # humidity is 1 byte
@@ -193,10 +200,10 @@ class DHTBase:
                     self._temperature = buf[2]
                 else:
                     # humidity is 2 bytes
-                    self._humidity = ((buf[0]<<8) | buf[1]) / 10
+                    self._humidity = ((buf[0] << 8) | buf[1]) / 10
                     # temperature is 2 bytes
                     # MSB is sign, bits 0-14 are magnitude)
-                    raw_temperature = (((buf[2] & 0x7f)<<8) | buf[3]) / 10
+                    raw_temperature = (((buf[2] & 0x7F) << 8) | buf[3]) / 10
                     # set sign
                     if buf[2] & 0x80:
                         raw_temperature = -raw_temperature
@@ -207,7 +214,7 @@ class DHTBase:
                     chk_sum += b
 
                 # checksum is the last byte
-                if chk_sum & 0xff != buf[4]:
+                if chk_sum & 0xFF != buf[4]:
                     # check sum failed to validate
                     raise RuntimeError("Checksum did not validate. Try again.")
 
@@ -217,6 +224,7 @@ class DHTBase:
             else:
                 # Probably a connection issue!
                 raise RuntimeError("DHT sensor not found, check wiring")
+
     @property
     def temperature(self):
         """ temperature current reading.  It makes sure a reading is available
@@ -237,11 +245,13 @@ class DHTBase:
         self.measure()
         return self._humidity
 
+
 class DHT11(DHTBase):
     """ Support for DHT11 device.
 
         :param ~board.Pin pin: digital pin used for communication
     """
+
     def __init__(self, pin):
         super().__init__(True, pin, 18000)
 
@@ -251,5 +261,6 @@ class DHT22(DHTBase):
 
         :param ~board.Pin pin: digital pin used for communication
     """
+
     def __init__(self, pin):
         super().__init__(False, pin, 1000)
