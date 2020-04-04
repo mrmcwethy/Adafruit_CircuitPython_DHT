@@ -180,50 +180,57 @@ class DHTBase:
         ):
             self._last_called = time.monotonic()
 
+            new_temperature = 0
+            new_humidity = 0
+
             if _USE_PULSEIO:
                 pulses = self._get_pulses_pulseio()
             else:
                 pulses = self._get_pulses_bitbang()
             # print(len(pulses), "pulses:", [x for x in pulses])
 
-            if len(pulses) >= 80:
-                buf = array.array("B")
-                for byte_start in range(0, 80, 16):
-                    buf.append(
-                        self._pulses_to_binary(pulses, byte_start, byte_start + 16)
-                    )
-
-                if self._dht11:
-                    # humidity is 1 byte
-                    self._humidity = buf[0]
-                    # temperature is 1 byte
-                    self._temperature = buf[2]
-                else:
-                    # humidity is 2 bytes
-                    self._humidity = ((buf[0] << 8) | buf[1]) / 10
-                    # temperature is 2 bytes
-                    # MSB is sign, bits 0-14 are magnitude)
-                    raw_temperature = (((buf[2] & 0x7F) << 8) | buf[3]) / 10
-                    # set sign
-                    if buf[2] & 0x80:
-                        raw_temperature = -raw_temperature
-                    self._temperature = raw_temperature
-                # calc checksum
-                chk_sum = 0
-                for b in buf[0:4]:
-                    chk_sum += b
-
-                # checksum is the last byte
-                if chk_sum & 0xFF != buf[4]:
-                    # check sum failed to validate
-                    raise RuntimeError("Checksum did not validate. Try again.")
-
-            elif len(pulses) >= 10:
-                # We got *some* data just not 81 bits
-                raise RuntimeError("A full buffer was not returned.  Try again.")
-            else:
+            if len(pulses) < 10:
                 # Probably a connection issue!
                 raise RuntimeError("DHT sensor not found, check wiring")
+
+            if len(pulses) < 80:
+                # We got *some* data just not 81 bits
+                raise RuntimeError("A full buffer was not returned. Try again.")
+
+            buf = array.array("B")
+            for byte_start in range(0, 80, 16):
+                buf.append(self._pulses_to_binary(pulses, byte_start, byte_start + 16))
+
+            if self._dht11:
+                # humidity is 1 byte
+                new_humidity = buf[0]
+                # temperature is 1 byte
+                new_temperature = buf[2]
+            else:
+                # humidity is 2 bytes
+                new_humidity = ((buf[0] << 8) | buf[1]) / 10
+                # temperature is 2 bytes
+                # MSB is sign, bits 0-14 are magnitude)
+                new_temperature = (((buf[2] & 0x7F) << 8) | buf[3]) / 10
+                # set sign
+                if buf[2] & 0x80:
+                    new_temperature = -new_temperature
+            # calc checksum
+            chk_sum = 0
+            for b in buf[0:4]:
+                chk_sum += b
+
+            # checksum is the last byte
+            if chk_sum & 0xFF != buf[4]:
+                # check sum failed to validate
+                raise RuntimeError("Checksum did not validate. Try again.")
+
+            if new_humidity < 0 or new_humidity > 100:
+                # We received unplausible data
+                raise RuntimeError("Received unplausible data. Try again.")
+
+            self._temperature = new_temperature
+            self._humidity = new_humidity
 
     @property
     def temperature(self):
