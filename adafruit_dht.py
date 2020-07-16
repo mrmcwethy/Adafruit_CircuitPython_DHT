@@ -51,7 +51,7 @@ class DHTBase:
 
     __hiLevel = 51
 
-    def __init__(self, dht11, pin, trig_wait):
+    def __init__(self, dht11, pin, trig_wait, use_pulseio):
         """
         :param boolean dht11: True if device is DHT11, otherwise DHT22.
         :param ~board.Pin pin: digital pin used for communication
@@ -63,10 +63,16 @@ class DHTBase:
         self._last_called = 0
         self._humidity = None
         self._temperature = None
+        self._use_pulseio = use_pulseio
         # We don't use a context because linux-based systems are sluggish
         # and we're better off having a running process
-        if _USE_PULSEIO:
+        if self._use_pulseio:
             self.pulse_in = PulseIn(self._pin, 81, True)
+
+    def exit(self):
+        if self._use_pulseio:
+            print("De-initializing self.pulse_in")
+            self.pulse_in.deinit()
 
     def _pulses_to_binary(self, pulses, start, stop):
         """Takes pulses, a list of transition times, and converts
@@ -108,7 +114,7 @@ class DHTBase:
         pulses will have 81 elements for the DHT11/22 type devices.
         """
         pulses = array.array("H")
-        if _USE_PULSEIO:
+        if self._use_pulseio:
             # The DHT type device use a specialize 1-wire protocol
             # The microprocessor first sends a LOW signal for a
             # specific length of time.  Then the device sends back a
@@ -183,7 +189,7 @@ class DHTBase:
             new_temperature = 0
             new_humidity = 0
 
-            if _USE_PULSEIO:
+            if self._use_pulseio:
                 pulses = self._get_pulses_pulseio()
             else:
                 pulses = self._get_pulses_bitbang()
@@ -259,8 +265,8 @@ class DHT11(DHTBase):
         :param ~board.Pin pin: digital pin used for communication
     """
 
-    def __init__(self, pin):
-        super().__init__(True, pin, 18000)
+    def __init__(self, pin, use_pulseio=_USE_PULSEIO):
+        super().__init__(True, pin, 18000, use_pulseio)
 
 
 class DHT22(DHTBase):
@@ -269,5 +275,5 @@ class DHT22(DHTBase):
         :param ~board.Pin pin: digital pin used for communication
     """
 
-    def __init__(self, pin):
-        super().__init__(False, pin, 1000)
+    def __init__(self, pin, use_pulseio=_USE_PULSEIO):
+        super().__init__(False, pin, 1000, use_pulseio)
