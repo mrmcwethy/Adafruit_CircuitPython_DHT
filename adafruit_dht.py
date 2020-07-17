@@ -70,6 +70,7 @@ class DHTBase:
             self.pulse_in = PulseIn(self._pin, 81, True)
 
     def exit(self):
+        """ Cleans up the PulseIn process. Must be called explicitly """
         if self._use_pulseio:
             print("De-initializing self.pulse_in")
             self.pulse_in.deinit()
