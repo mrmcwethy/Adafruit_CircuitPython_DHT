@@ -30,6 +30,7 @@ CircuitPython support for the DHT11 and DHT22 temperature and humidity devices.
 
 import array
 import time
+from os import uname
 from digitalio import DigitalInOut, Pull, Direction
 
 _USE_PULSEIO = False
@@ -64,6 +65,8 @@ class DHTBase:
         self._humidity = None
         self._temperature = None
         self._use_pulseio = use_pulseio
+        if "Linux" not in uname() and not self._use_pulseio:
+            raise Exception("Bitbanging is not supported when using CircuitPython.")
         # We don't use a context because linux-based systems are sluggish
         # and we're better off having a running process
         if self._use_pulseio:
