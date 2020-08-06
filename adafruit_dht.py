@@ -67,6 +67,7 @@ class DHTBase:
         # and we're better off having a running process
         if _USE_PULSEIO:
             self.pulse_in = PulseIn(self._pin, 81, True)
+            self.pulse_in.pause()
 
     def _pulses_to_binary(self, pulses, start, stop):
         """Takes pulses, a list of transition times, and converts
@@ -114,7 +115,6 @@ class DHTBase:
             # specific length of time.  Then the device sends back a
             # series HIGH and LOW signals.  The length the HIGH signals
             # represents the device values.
-            self.pulse_in.pause()
             self.pulse_in.clear()
             self.pulse_in.resume(self._trig_wait)
 
