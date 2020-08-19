@@ -57,6 +57,7 @@ class DHTBase:
         :param boolean dht11: True if device is DHT11, otherwise DHT22.
         :param ~board.Pin pin: digital pin used for communication
         :param int trig_wait: length of time to hold trigger in LOW state (microseconds)
+        :param boolean use_pulseio: False to force bitbang when pulseio available (only with Blinka)
         """
         self._dht11 = dht11
         self._pin = pin
