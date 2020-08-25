@@ -72,6 +72,7 @@ class DHTBase:
         # and we're better off having a running process
         if self._use_pulseio:
             self.pulse_in = PulseIn(self._pin, 81, True)
+            self.pulse_in.pause()
 
     def exit(self):
         """ Cleans up the PulseIn process. Must be called explicitly """
@@ -125,7 +126,6 @@ class DHTBase:
             # specific length of time.  Then the device sends back a
             # series HIGH and LOW signals.  The length the HIGH signals
             # represents the device values.
-            self.pulse_in.pause()
             self.pulse_in.clear()
             self.pulse_in.resume(self._trig_wait)
 
