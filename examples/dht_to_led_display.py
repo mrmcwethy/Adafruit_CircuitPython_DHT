@@ -8,8 +8,8 @@ import time
 from board import D2, TX, RX, D1
 import busio
 import digitalio
-import adafruit_dht
 from adafruit_max7219 import bcddigits
+import adafruit_dht
 
 
 clk = RX
