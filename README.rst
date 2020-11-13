@@ -6,9 +6,14 @@ Introduction
     :target: https://circuitpython.readthedocs.io/projects/dht/en/latest/
     :alt: Documentation Status
 
-.. image :: https://badges.gitter.im/adafruit/circuitpython.svg
-    :target: https://gitter.im/adafruit/circuitpython?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge
-    :alt: Gitter
+
+.. image :: https://img.shields.io/discord/327254708534116352.svg
+    :target: https://adafru.it/discord
+    :alt: Discord
+
+.. image:: https://github.com/adafruit/Adafruit_CircuitPython_DHT/workflows/Build%20CI/badge.svg
+    :target: https://github.com/adafruit/Adafruit_CircuitPython_DHT/actions
+    :alt: Build Status
 
 CircuitPython support for the DHT11 and DHT22 temperature and humidity devices.
 
@@ -22,18 +27,43 @@ Please ensure all dependencies are available on the CircuitPython filesystem.
 This is easily achieved by downloading
 `the Adafruit library and driver bundle <https://github.com/adafruit/Adafruit_CircuitPython_Bundle>`_.
 
+Installing from PyPI
+====================
+
+On supported GNU/Linux systems like the Raspberry Pi, you can install the driver locally `from
+PyPI <https://pypi.org/project/adafruit-circuitpython-dht/>`_. To install for current user:
+
+.. code-block:: shell
+
+    pip3 install adafruit-circuitpython-dht
+
+To install system-wide (this may be required in some cases):
+
+.. code-block:: shell
+
+    sudo pip3 install adafruit-circuitpython-dht
+
+To install in a virtual environment in your current project:
+
+.. code-block:: shell
+
+    mkdir project-name && cd project-name
+    python3 -m venv .env
+    source .env/bin/activate
+    pip3 install adafruit-circuitpython-dht
+
 Usage Example
-=============
+==============
 
 Hardware Set-up
----------------
+----------------
 
 The DHT11 and DHT22 devices both need a pull-resistor on the data signal wire.  
 This resistor is in the range of 1k to 5k.  Please check your device datasheet for the 
 appropriate value.
 
 Basics
-------
+-------
 
 Of course, you must import the library to use it:
 
@@ -60,7 +90,7 @@ OR initialize the DHT22 device:
     dht_device = adafruit_dht.DHT22(<pin>)
 
 Read temperature and humidity
-----------------------------
+------------------------------
 
 Now get the temperature and humidity values
 
@@ -70,7 +100,8 @@ Now get the temperature and humidity values
     humidity = dht_device.humidity
 
 These properties may raise an exception if a problem occurs.  You should use try/raise 
-logic and catch RuntimeError and then retry getting the values after 1/2 second.
+logic and catch RuntimeError and then retry getting the values after at least 2 seconds.
+If you try again to get a result within 2 seconds, cached values are returned.
 
 Contributing
 ============
@@ -79,10 +110,7 @@ Contributions are welcome! Please read our `Code of Conduct
 <https://github.com/adafruit/Adafruit_CircuitPython_DHT/blob/master/CODE_OF_CONDUCT.md>`_
 before contributing to help this project stay welcoming.
 
-API Reference
+Documentation
 =============
 
-.. toctree::
-   :maxdepth: 2
-
-   api
+For information on building library documentation, please check out `this guide <https://learn.adafruit.com/creating-and-sharing-a-circuitpython-library/sharing-our-docs-on-readthedocs#sphinx-5-1>`_.
