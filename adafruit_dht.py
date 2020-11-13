@@ -77,7 +77,6 @@ class DHTBase:
     def exit(self):
         """ Cleans up the PulseIn process. Must be called explicitly """
         if self._use_pulseio:
-            print("De-initializing self.pulse_in")
             self.pulse_in.deinit()
 
     def _pulses_to_binary(self, pulses, start, stop):
