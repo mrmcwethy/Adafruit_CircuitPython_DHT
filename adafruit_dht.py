@@ -38,7 +38,7 @@ try:
     from pulseio import PulseIn
 
     _USE_PULSEIO = True
-except ImportError:
+except (ImportError, NotImplementedError):
     pass  # This is OK, we'll try to bitbang it!
 
 
