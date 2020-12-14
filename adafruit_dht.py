@@ -31,7 +31,7 @@ CircuitPython support for the DHT11 and DHT22 temperature and humidity devices.
 import array
 import time
 from os import uname
-from digitalio import DigitalInOut, Pull, Direction
+from digitalio import DigitalInOut, Direction
 
 _USE_PULSEIO = False
 try:
