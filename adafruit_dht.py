@@ -160,7 +160,15 @@ class DHTBase:
             timestamp = time.monotonic()  # take timestamp
             dhtval = True  # start with dht pin true because its pulled up
             dhtpin.direction = Direction.INPUT
-            dhtpin.pull = Pull.UP
+
+            try:
+                dhtpin.pull = Pull.UP
+            # Catch the NotImplementedError raised because
+            # blinka.microcontroller.generic_linux.libgpiod_pin does not support
+            # internal pull resistors.
+            except NotImplementedError:
+                dhtpin.pull = None
+
             while time.monotonic() - timestamp < 0.25:
                 if dhtval != dhtpin.value:
                     dhtval = not dhtval  # we toggled
