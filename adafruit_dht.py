@@ -1,24 +1,7 @@
-# The MIT License (MIT)
+# SPDX-FileCopyrightText: 2017 Mike McWethy for Adafruit Industries
 #
-# Copyright (c) 2017 Mike McWethy for Adafruit Industries
-#
-# Permission is hereby granted, free of charge, to any person obtaining a copy
-# of this software and associated documentation files (the "Software"), to deal
-# in the Software without restriction, including without limitation the rights
-# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-# copies of the Software, and to permit persons to whom the Software is
-# furnished to do so, subject to the following conditions:
-#
-# The above copyright notice and this permission notice shall be included in
-# all copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-# THE SOFTWARE.
+# SPDX-License-Identifier: MIT
+
 """
 :mod:`adafruit_dhtlib`
 ======================
@@ -47,8 +30,7 @@ __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_DHT.git"
 
 
 class DHTBase:
-    """ base support for DHT11 and DHT22 devices
-    """
+    """base support for DHT11 and DHT22 devices"""
 
     __hiLevel = 51
 
@@ -110,7 +92,7 @@ class DHTBase:
         return binary
 
     def _get_pulses_pulseio(self):
-        """ _get_pulses implements the communication protcol for
+        """_get_pulses implements the communication protcol for
         DHT11 and DHT22 type devices.  It sends a start signal
         of a specific length and listens and measures the
         return signal lengths.
@@ -138,7 +120,7 @@ class DHTBase:
         return pulses
 
     def _get_pulses_bitbang(self):
-        """ _get_pulses implements the communication protcol for
+        """_get_pulses implements the communication protcol for
         DHT11 and DHT22 type devices.  It sends a start signal
         of a specific length and listens and measures the
         return signal lengths.
@@ -182,12 +164,12 @@ class DHTBase:
         return pulses
 
     def measure(self):
-        """ measure runs the communications to the DHT11/22 type device.
-            if successful, the class properties temperature and humidity will
-            return the reading returned from the device.
+        """measure runs the communications to the DHT11/22 type device.
+        if successful, the class properties temperature and humidity will
+        return the reading returned from the device.
 
-            Raises RuntimeError exception for checksum failure and for insuffcient
-            data returned from the device (try again)
+        Raises RuntimeError exception for checksum failure and for insuffcient
+        data returned from the device (try again)
         """
         delay_between_readings = 2  # 2 seconds per read according to datasheet
         # Initiate new reading if this is the first call or if sufficient delay
@@ -253,29 +235,29 @@ class DHTBase:
 
     @property
     def temperature(self):
-        """ temperature current reading.  It makes sure a reading is available
+        """temperature current reading.  It makes sure a reading is available
 
-            Raises RuntimeError exception for checksum failure and for insuffcient
-            data returned from the device (try again)
+        Raises RuntimeError exception for checksum failure and for insuffcient
+        data returned from the device (try again)
         """
         self.measure()
         return self._temperature
 
     @property
     def humidity(self):
-        """ humidity current reading. It makes sure a reading is available
+        """humidity current reading. It makes sure a reading is available
 
-            Raises RuntimeError exception for checksum failure and for insuffcient
-            data returned from the device (try again)
+        Raises RuntimeError exception for checksum failure and for insuffcient
+        data returned from the device (try again)
         """
         self.measure()
         return self._humidity
 
 
 class DHT11(DHTBase):
-    """ Support for DHT11 device.
+    """Support for DHT11 device.
 
-        :param ~board.Pin pin: digital pin used for communication
+    :param ~board.Pin pin: digital pin used for communication
     """
 
     def __init__(self, pin, use_pulseio=_USE_PULSEIO):
@@ -283,9 +265,9 @@ class DHT11(DHTBase):
 
 
 class DHT22(DHTBase):
-    """ Support for DHT22 device.
+    """Support for DHT22 device.
 
-        :param ~board.Pin pin: digital pin used for communication
+    :param ~board.Pin pin: digital pin used for communication
     """
 
     def __init__(self, pin, use_pulseio=_USE_PULSEIO):
