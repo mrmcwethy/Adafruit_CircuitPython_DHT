@@ -139,7 +139,7 @@ class DHTBase:
             time.sleep(0.1)
             dhtpin.value = False
             # Using the time to pull-down the line according to DHT Model
-            time.sleep(self._trig_wait // 1000000)
+            time.sleep(self._trig_wait / 1000000)
             timestamp = time.monotonic()  # take timestamp
             dhtval = True  # start with dht pin true because its pulled up
             dhtpin.direction = Direction.INPUT
