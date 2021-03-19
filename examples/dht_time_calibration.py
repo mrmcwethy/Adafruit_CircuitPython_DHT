@@ -22,7 +22,10 @@ time_increment = 100
 # Variable to store all reads on a try
 reads = {}
 
-print("\nInitializing test.\n")
+print(
+    "\nInitializing test.\n",
+    f"Total tries per trig_wait {max_retries_per_time}"
+)
 
 for milliseconds in range(min_time, max_time, time_increment):
     # Instantiate the DHT11 object.
@@ -78,8 +81,8 @@ best_times = [
     milliseconds for milliseconds in reads if reads[milliseconds]['total_reads'] == best_result
 ]
 print(
-    f"Maximum reads: {best_result} with the "
-    f"following times: {' ,'.join([str(t) for t in best_times])}"
+    f"Maximum reads: {best_result}  out of {max_retries_per_time} with the "
+    f"following times: {', '.join([str(t) for t in best_times])}"
 )
 
 # change the value on the line below to see all reads performed.
