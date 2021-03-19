@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2021 yeyeto2788 for Adafruit Industries
+# SPDX-License-Identifier: MIT
+
 import json
 import time
 
