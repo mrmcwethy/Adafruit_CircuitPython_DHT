@@ -58,8 +58,8 @@ Usage Example
 Hardware Set-up
 ----------------
 
-The DHT11 and DHT22 devices both need a pull-resistor on the data signal wire.  
-This resistor is in the range of 1k to 5k.  Please check your device datasheet for the 
+The DHT11 and DHT22 devices both need a pull-resistor on the data signal wire.
+This resistor is in the range of 1k to 5k.  Please check your device datasheet for the
 appropriate value.
 
 Basics
@@ -99,7 +99,7 @@ Now get the temperature and humidity values
     temperature = dht_device.temperature
     humidity = dht_device.humidity
 
-These properties may raise an exception if a problem occurs.  You should use try/raise 
+These properties may raise an exception if a problem occurs.  You should use try/raise
 logic and catch RuntimeError and then retry getting the values after at least 2 seconds.
 If you try again to get a result within 2 seconds, cached values are returned.
 
