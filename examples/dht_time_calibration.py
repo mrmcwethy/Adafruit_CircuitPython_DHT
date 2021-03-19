@@ -12,9 +12,9 @@ pin_to_use = "PG6"
 
 # Maximum number of tries per timing
 max_retries_per_time = 10
-# Minimum time from where to start testing
-min_time = 500
-# Maximum time on where to stop testing
+# Minimum wait time from where to start testing
+min_time = 1500
+# Maximum wait time on where to stop testing
 max_time = 2000
 # Increment on time
 time_increment = 100
@@ -22,7 +22,20 @@ time_increment = 100
 # Variable to store all reads on a try
 reads = {}
 
-print("\nInitializing test.\n", f"Total tries per trig_wait {max_retries_per_time}")
+initial_msg = f"""
+\nInitializing test with the following parameters:
+
+- Maximum retries per waiting time: {max_retries_per_time}
+- Start time (ms): {min_time}
+- End time (ms): {max_time}
+- Increment time (ms): {time_increment}
+
+This execution will try to read the sensor {max_retries_per_time} times
+for {len(range(min_time, max_time, time_increment))} different wait times values.
+
+"""
+# Print initial message on the console.
+print(initial_msg)
 
 for milliseconds in range(min_time, max_time, time_increment):
     # Instantiate the DHT11 object.
