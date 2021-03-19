@@ -76,7 +76,7 @@ best_times = [
 ]
 print(
     f"Maximum reads: {best_result} with the "
-    f"following times: {''.join([str(t) for t in best_times])}"
+    f"following times: {' ,'.join([str(t) for t in best_times])}"
 )
 
 # change the value on the line below to see all reads performed.
