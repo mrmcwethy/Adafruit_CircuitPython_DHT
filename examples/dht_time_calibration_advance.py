@@ -1,6 +1,15 @@
 # SPDX-FileCopyrightText: 2021 yeyeto2788 for Adafruit Industries
 # SPDX-License-Identifier: MIT
 
+"""
+This script let's you check the best timing for you sensor as other people have face timing issues
+as seen on issue https://github.com/adafruit/Adafruit_CircuitPython_DHT/issues/66.
+
+By changing the variables values below you will be able to check the best timing for you sensor,
+take into account that by most datasheets the timing for the sensor are 0.001 DHT22 and
+0.018 for DHT11 which are the default values of the library.
+"""
+
 import json
 import time
 
@@ -8,6 +17,7 @@ import board
 
 import adafruit_dht
 
+# Change the pin used below
 pin_to_use = "PG6"
 
 # Maximum number of tries per timing
@@ -41,10 +51,10 @@ for milliseconds in range(min_time, max_time, time_increment):
     # Instantiate the DHT11 object.
     dhtDevice = adafruit_dht.DHT11(pin=getattr(board, pin_to_use))
     # Change the default wait time for triggering the read.
-    # pylint: disable=W0212
+    # pylint: disable=protected-access
     dhtDevice._trig_wait = milliseconds
 
-    # pylint: disable=W0212
+    # pylint: disable=protected-access
     print(f"Using 'trig_wait' of {dhtDevice._trig_wait}")
     # Reset the read count for next loop
     reads_count = 0
