@@ -9,7 +9,7 @@ Ensure your device works with this simple test.
 
 
 Time calibration advance test
-------------
+------------------------------
 
 Check what is the best time your sensor.
 
