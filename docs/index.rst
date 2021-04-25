@@ -23,6 +23,8 @@ Table of Contents
 .. toctree::
     :caption: Tutorials
 
+    DHT basic temperature-humidity sensor Learning Guide <https://learn.adafruit.com/dht>
+
 .. toctree::
     :caption: Related Products
 

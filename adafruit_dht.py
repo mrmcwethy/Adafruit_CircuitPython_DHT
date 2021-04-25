@@ -9,6 +9,21 @@
 CircuitPython support for the DHT11 and DHT22 temperature and humidity devices.
 
 * Author(s): Mike McWethy
+
+**Hardware:**
+
+* Adafruit `DHT22 temperature-humidity sensor + extras
+  <https://www.adafruit.com/product/385>`_ (Product ID: 385)
+
+* Adafruit `DHT11 basic temperature-humidity sensor + extras
+  <https://www.adafruit.com/product/386>`_ (Product ID: 386)
+
+
+**Software and Dependencies:**
+
+* Adafruit CircuitPython firmware for the supported boards:
+  https://circuitpython.org/downloads
+
 """
 
 import array
@@ -92,7 +107,7 @@ class DHTBase:
         return binary
 
     def _get_pulses_pulseio(self):
-        """_get_pulses implements the communication protcol for
+        """_get_pulses implements the communication protocol for
         DHT11 and DHT22 type devices.  It sends a start signal
         of a specific length and listens and measures the
         return signal lengths.
@@ -169,7 +184,7 @@ class DHTBase:
         if successful, the class properties temperature and humidity will
         return the reading returned from the device.
 
-        Raises RuntimeError exception for checksum failure and for insuffcient
+        Raises RuntimeError exception for checksum failure and for insufficient
         data returned from the device (try again)
         """
         delay_between_readings = 2  # 2 seconds per read according to datasheet
@@ -238,7 +253,7 @@ class DHTBase:
     def temperature(self):
         """temperature current reading.  It makes sure a reading is available
 
-        Raises RuntimeError exception for checksum failure and for insuffcient
+        Raises RuntimeError exception for checksum failure and for insufficient
         data returned from the device (try again)
         """
         self.measure()
@@ -248,7 +263,7 @@ class DHTBase:
     def humidity(self):
         """humidity current reading. It makes sure a reading is available
 
-        Raises RuntimeError exception for checksum failure and for insuffcient
+        Raises RuntimeError exception for checksum failure and for insufficient
         data returned from the device (try again)
         """
         self.measure()
