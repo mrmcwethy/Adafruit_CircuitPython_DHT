@@ -58,9 +58,26 @@ Usage Example
 Hardware Set-up
 ----------------
 
-The DHT11 and DHT22 devices both need a pull-resistor on the data signal wire.
-This resistor is in the range of 1k to 5k.  Please check your device datasheet for the
-appropriate value.
+Designed specifically to work with the Adafruit DHT series sensors:
+
+* Adafruit `DHT22 temperature-humidity sensor + extras <https://www.adafruit.com/products/385>`_
+* Adafruit `DHT11 temperature-humidity sensor + extras <https://www.adafruit.com/products/386>`_
+
+.. note::
+    DHT11 and DHT22 devices both need a pull-resistor on the data signal wire. This resistor is in the range of 1k to 5k
+
+
+* Please check the device datasheet for the appropriate value.
+* Be sure that you are running Buster Operating System.
+* Make sure that your user is part of the ``gpio`` group.
+
+
+Known Issues
+------------
+
+* Library may or may not work in Linux 64-bit platforms
+* Raspberry PI-ZERO does not provide reliable readings
+* Readings in FeatherS2 does not work as expected.
 
 Basics
 -------
