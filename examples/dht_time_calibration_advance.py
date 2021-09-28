@@ -87,7 +87,10 @@ for milliseconds in range(min_time, max_time, time_increment):
 
 # Gather the highest read numbers from all reads done.
 best_result = max(
-    [reads[milliseconds]["total_reads"] for milliseconds in reads] # pylint: disable=consider-using-dict-items
+    [
+        reads[milliseconds]["total_reads"]
+        for milliseconds in reads  # pylint: disable=consider-using-dict-items
+    ]
 )
 # Gather best time(s) in milliseconds where we got more reads
 best_times = [
