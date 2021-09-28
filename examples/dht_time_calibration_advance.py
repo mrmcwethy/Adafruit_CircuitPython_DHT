@@ -86,12 +86,16 @@ for milliseconds in range(min_time, max_time, time_increment):
     dhtDevice.exit()
 
 # Gather the highest read numbers from all reads done.
-best_result = max([reads[milliseconds]["total_reads"] for milliseconds in reads])
-
+best_result = max(
+    [
+        reads[milliseconds]["total_reads"]
+        for milliseconds in reads  # pylint: disable=consider-using-dict-items
+    ]
+)
 # Gather best time(s) in milliseconds where we got more reads
 best_times = [
     milliseconds
-    for milliseconds in reads
+    for milliseconds in reads  # pylint: disable=consider-using-dict-items
     if reads[milliseconds]["total_reads"] == best_result
 ]
 print(
