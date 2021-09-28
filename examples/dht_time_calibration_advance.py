@@ -91,8 +91,8 @@ best_result = max([reads[milliseconds]["total_reads"] for milliseconds in reads]
 # Gather best time(s) in milliseconds where we got more reads
 best_times = [
     milliseconds
-    for milliseconds in reads
-    if reads[milliseconds]["total_reads"] == best_result
+    for milliseconds in reads.values()
+    if milliseconds["total_reads"] == best_result
 ]
 print(
     f"Maximum reads: {best_result}  out of {max_retries_per_time} with the "
