@@ -120,6 +120,11 @@ These properties may raise an exception if a problem occurs.  You should use try
 logic and catch RuntimeError and then retry getting the values after at least 2 seconds.
 If you try again to get a result within 2 seconds, cached values are returned.
 
+Documentation
+=============
+
+API documentation for this library can be found on `Read the Docs <https://circuitpython.readthedocs.io/projects/dht/en/latest/>`_.
+
 Contributing
 ============
 
