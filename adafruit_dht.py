@@ -30,6 +30,7 @@ import array
 import time
 from os import uname
 from digitalio import DigitalInOut, Pull, Direction
+from microcontroller import Pin
 
 _USE_PULSEIO = False
 try:
@@ -49,7 +50,7 @@ class DHTBase:
 
     __hiLevel = 51
 
-    def __init__(self, dht11, pin, trig_wait, use_pulseio):
+    def __init__(self, dht11: bool, pin: Pin, trig_wait: int, use_pulseio: bool):
         """
         :param boolean dht11: True if device is DHT11, otherwise DHT22.
         :param ~board.Pin pin: digital pin used for communication
@@ -59,25 +60,25 @@ class DHTBase:
         self._dht11 = dht11
         self._pin = pin
         self._trig_wait = trig_wait
-        self._last_called = 0
-        self._humidity = None
-        self._temperature = None
+        self._last_called: float = 0
+        self._humidity: int | float | None = None
+        self._temperature: int | float | None = None
         self._use_pulseio = use_pulseio
         if "Linux" not in uname() and not self._use_pulseio:
             raise Exception("Bitbanging is not supported when using CircuitPython.")
         # We don't use a context because linux-based systems are sluggish
         # and we're better off having a running process
         if self._use_pulseio:
-            self.pulse_in = PulseIn(self._pin, 81, True)
+            self.pulse_in = PulseIn(self._pin, maxlen=81, idle_state=True)
             self.pulse_in.pause()
 
-    def exit(self):
-        """ Cleans up the PulseIn process. Must be called explicitly """
+    def exit(self) -> None:
+        """Cleans up the PulseIn process. Must be called explicitly"""
         if self._use_pulseio:
             print("De-initializing self.pulse_in")
             self.pulse_in.deinit()
 
-    def _pulses_to_binary(self, pulses, start, stop):
+    def _pulses_to_binary(self, pulses: array.array[int], start: int, stop: int) -> int:
         """Takes pulses, a list of transition times, and converts
         them to a 1's or 0's.  The pulses array contains the transition times.
         pulses starts with a low transition time followed by a high transistion time.
@@ -106,7 +107,7 @@ class DHTBase:
 
         return binary
 
-    def _get_pulses_pulseio(self):
+    def _get_pulses_pulseio(self) -> array.array[int]:
         """_get_pulses implements the communication protocol for
         DHT11 and DHT22 type devices.  It sends a start signal
         of a specific length and listens and measures the
@@ -134,7 +135,7 @@ class DHTBase:
                 pulses.append(self.pulse_in.popleft())
         return pulses
 
-    def _get_pulses_bitbang(self):
+    def _get_pulses_bitbang(self) -> array.array[int]:
         """_get_pulses implements the communication protcol for
         DHT11 and DHT22 type devices.  It sends a start signal
         of a specific length and listens and measures the
@@ -179,7 +180,7 @@ class DHTBase:
                 pulses.append(min(pulses_micro_sec, 65535))
         return pulses
 
-    def measure(self):
+    def measure(self) -> None:
         """measure runs the communications to the DHT11/22 type device.
         if successful, the class properties temperature and humidity will
         return the reading returned from the device.
@@ -197,8 +198,8 @@ class DHTBase:
         ):
             self._last_called = time.monotonic()
 
-            new_temperature = 0
-            new_humidity = 0
+            new_temperature: int | float = 0
+            new_humidity: int | float = 0
 
             if self._use_pulseio:
                 pulses = self._get_pulses_pulseio()
@@ -250,7 +251,7 @@ class DHTBase:
             self._humidity = new_humidity
 
     @property
-    def temperature(self):
+    def temperature(self) -> int | float | None:
         """temperature current reading.  It makes sure a reading is available
 
         Raises RuntimeError exception for checksum failure and for insufficient
@@ -260,7 +261,7 @@ class DHTBase:
         return self._temperature
 
     @property
-    def humidity(self):
+    def humidity(self) -> int | float | None:
         """humidity current reading. It makes sure a reading is available
 
         Raises RuntimeError exception for checksum failure and for insufficient
@@ -276,7 +277,7 @@ class DHT11(DHTBase):
     :param ~board.Pin pin: digital pin used for communication
     """
 
-    def __init__(self, pin, use_pulseio=_USE_PULSEIO):
+    def __init__(self, pin: Pin, use_pulseio: bool = _USE_PULSEIO):
         super().__init__(True, pin, 18000, use_pulseio)
 
 
@@ -286,5 +287,5 @@ class DHT22(DHTBase):
     :param ~board.Pin pin: digital pin used for communication
     """
 
-    def __init__(self, pin, use_pulseio=_USE_PULSEIO):
+    def __init__(self, pin: Pin, use_pulseio: bool = _USE_PULSEIO):
         super().__init__(False, pin, 1000, use_pulseio)
