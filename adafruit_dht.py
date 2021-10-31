@@ -65,9 +65,9 @@ class DHTBase:
         self._dht11 = dht11
         self._pin = pin
         self._trig_wait = trig_wait
-        self._last_called: float = 0
-        self._humidity: Union[int, float, None] = None
-        self._temperature: Union[int, float, None] = None
+        self._last_called = 0
+        self._humidity = None
+        self._temperature = None
         self._use_pulseio = use_pulseio
         if "Linux" not in uname() and not self._use_pulseio:
             raise Exception("Bitbanging is not supported when using CircuitPython.")
@@ -203,8 +203,8 @@ class DHTBase:
         ):
             self._last_called = time.monotonic()
 
-            new_temperature: Union[int, float] = 0
-            new_humidity: Union[int, float] = 0
+            new_temperature = 0
+            new_humidity = 0
 
             if self._use_pulseio:
                 pulses = self._get_pulses_pulseio()
