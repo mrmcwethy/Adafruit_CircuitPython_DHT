@@ -112,7 +112,7 @@ class DHTBase:
 
         return binary
 
-    def _get_pulses_pulseio(self) -> array.array[int]:
+    def _get_pulses_pulseio(self) -> array.array:
         """_get_pulses implements the communication protocol for
         DHT11 and DHT22 type devices.  It sends a start signal
         of a specific length and listens and measures the
