@@ -83,7 +83,7 @@ class DHTBase:
             print("De-initializing self.pulse_in")
             self.pulse_in.deinit()
 
-    def _pulses_to_binary(self, pulses: array.array[int], start: int, stop: int) -> int:
+    def _pulses_to_binary(self, pulses: array.array, start: int, stop: int) -> int:
         """Takes pulses, a list of transition times, and converts
         them to a 1's or 0's.  The pulses array contains the transition times.
         pulses starts with a low transition time followed by a high transistion time.
@@ -140,7 +140,7 @@ class DHTBase:
                 pulses.append(self.pulse_in.popleft())
         return pulses
 
-    def _get_pulses_bitbang(self) -> array.array[int]:
+    def _get_pulses_bitbang(self) -> array.array:
         """_get_pulses implements the communication protcol for
         DHT11 and DHT22 type devices.  It sends a start signal
         of a specific length and listens and measures the
