@@ -30,7 +30,6 @@ import array
 import time
 from os import uname
 from digitalio import DigitalInOut, Pull, Direction
-from microcontroller import Pin
 
 _USE_PULSEIO = False
 try:
@@ -40,6 +39,12 @@ try:
 except (ImportError, NotImplementedError):
     pass  # This is OK, we'll try to bitbang it!
 
+try:
+    # Used only for typing
+    from typing import Union
+    from microcontroller import Pin
+except ImportError:
+    pass
 
 __version__ = "0.0.0-auto.0"
 __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_DHT.git"
@@ -61,8 +66,8 @@ class DHTBase:
         self._pin = pin
         self._trig_wait = trig_wait
         self._last_called: float = 0
-        self._humidity: int | float | None = None
-        self._temperature: int | float | None = None
+        self._humidity: Union[int, float, None] = None
+        self._temperature: Union[int, float, None] = None
         self._use_pulseio = use_pulseio
         if "Linux" not in uname() and not self._use_pulseio:
             raise Exception("Bitbanging is not supported when using CircuitPython.")
@@ -198,8 +203,8 @@ class DHTBase:
         ):
             self._last_called = time.monotonic()
 
-            new_temperature: int | float = 0
-            new_humidity: int | float = 0
+            new_temperature: Union[int, float] = 0
+            new_humidity: Union[int, float] = 0
 
             if self._use_pulseio:
                 pulses = self._get_pulses_pulseio()
@@ -251,7 +256,7 @@ class DHTBase:
             self._humidity = new_humidity
 
     @property
-    def temperature(self) -> int | float | None:
+    def temperature(self) -> Union[int, float, None]:
         """temperature current reading.  It makes sure a reading is available
 
         Raises RuntimeError exception for checksum failure and for insufficient
@@ -261,7 +266,7 @@ class DHTBase:
         return self._temperature
 
     @property
-    def humidity(self) -> int | float | None:
+    def humidity(self) -> Union[int, float, None]:
         """humidity current reading. It makes sure a reading is available
 
         Raises RuntimeError exception for checksum failure and for insufficient
