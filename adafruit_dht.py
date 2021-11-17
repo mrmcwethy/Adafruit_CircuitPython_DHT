@@ -55,7 +55,7 @@ class DHTBase:
 
     __hiLevel = 51
 
-    def __init__(self, dht11: bool, pin: Pin, trig_wait: int, use_pulseio: bool):
+    def __init__(self, dht11: bool, pin: Pin, trig_wait: int, max_pulses: int, use_pulseio: bool):
         """
         :param boolean dht11: True if device is DHT11, otherwise DHT22.
         :param ~board.Pin pin: digital pin used for communication
@@ -65,6 +65,7 @@ class DHTBase:
         self._dht11 = dht11
         self._pin = pin
         self._trig_wait = trig_wait
+        self._max_pulses = max_pulses
         self._last_called = 0
         self._humidity = None
         self._temperature = None
@@ -74,7 +75,7 @@ class DHTBase:
         # We don't use a context because linux-based systems are sluggish
         # and we're better off having a running process
         if self._use_pulseio:
-            self.pulse_in = PulseIn(self._pin, maxlen=81, idle_state=True)
+            self.pulse_in = PulseIn(self._pin, maxlen=self._max_pulses, idle_state=True)
             self.pulse_in.pause()
 
     def exit(self) -> None:
@@ -179,7 +180,7 @@ class DHTBase:
                     transitions.append(time.monotonic())  # save the timestamp
             # convert transtions to microsecond delta pulses:
             # use last 81 pulses
-            transition_start = max(1, len(transitions) - 81)
+            transition_start = max(1, len(transitions) - self._max_pulses)
             for i in range(transition_start, len(transitions)):
                 pulses_micro_sec = int(1000000 * (transitions[i] - transitions[i - 1]))
                 pulses.append(min(pulses_micro_sec, 65535))
@@ -283,7 +284,7 @@ class DHT11(DHTBase):
     """
 
     def __init__(self, pin: Pin, use_pulseio: bool = _USE_PULSEIO):
-        super().__init__(True, pin, 18000, use_pulseio)
+        super().__init__(True, pin, 18000, 81, use_pulseio)
 
 
 class DHT22(DHTBase):
@@ -293,4 +294,18 @@ class DHT22(DHTBase):
     """
 
     def __init__(self, pin: Pin, use_pulseio: bool = _USE_PULSEIO):
-        super().__init__(False, pin, 1000, use_pulseio)
+        super().__init__(False, pin, 1000, 81, use_pulseio)
+
+
+class DHT21(DHTBase):
+    """Support for DHT21/AM2301 device.
+
+    :param ~board.Pin pin: digital pin used for communication
+    """
+
+    # DHT21/AM2301 is sending three more dummy bytes after the "official" protocol.
+    # Pulseio will take only the last pulses up to maxPulses.
+    # If that would be 81, the dummy pulses will be read and the real data would be truncated.
+    # Hence setting maxPulses to 129, taking both real data and dummy bytes into buffer.
+    def __init__(self, pin: Pin, use_pulseio: bool = _USE_PULSEIO):
+        super().__init__(False, pin, 1000, 129, use_pulseio)
