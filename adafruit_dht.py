@@ -55,7 +55,15 @@ class DHTBase:
 
     __hiLevel = 51
 
-    def __init__(self, dht11: bool, pin: Pin, trig_wait: int, use_pulseio: bool, *, max_pulses: int = 81):
+    def __init__(
+        self,
+        dht11: bool,
+        pin: Pin,
+        trig_wait: int,
+        use_pulseio: bool,
+        *,
+        max_pulses: int = 81
+    ):
         """
         :param boolean dht11: True if device is DHT11, otherwise DHT22.
         :param ~board.Pin pin: digital pin used for communication
@@ -284,7 +292,7 @@ class DHT11(DHTBase):
     """
 
     def __init__(self, pin: Pin, use_pulseio: bool = _USE_PULSEIO):
-        super().__init__(True, pin, 18000, 81, use_pulseio)
+        super().__init__(True, pin, 18000, use_pulseio)
 
 
 class DHT22(DHTBase):
@@ -294,7 +302,7 @@ class DHT22(DHTBase):
     """
 
     def __init__(self, pin: Pin, use_pulseio: bool = _USE_PULSEIO):
-        super().__init__(False, pin, 1000, 81, use_pulseio)
+        super().__init__(False, pin, 1000, use_pulseio)
 
 
 class DHT21(DHTBase):
@@ -308,4 +316,4 @@ class DHT21(DHTBase):
     # If that would be 81, the dummy pulses will be read and the real data would be truncated.
     # Hence setting maxPulses to 129, taking both real data and dummy bytes into buffer.
     def __init__(self, pin: Pin, use_pulseio: bool = _USE_PULSEIO):
-        super().__init__(False, pin, 1000, 129, use_pulseio)
+        super().__init__(False, pin, 1000, use_pulseio, max_pulses=129)
