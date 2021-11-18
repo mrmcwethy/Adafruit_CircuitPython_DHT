@@ -55,7 +55,7 @@ class DHTBase:
 
     __hiLevel = 51
 
-    def __init__(self, dht11: bool, pin: Pin, trig_wait: int, max_pulses: int, use_pulseio: bool):
+    def __init__(self, dht11: bool, pin: Pin, trig_wait: int, use_pulseio: bool, *, max_pulses: int = 81):
         """
         :param boolean dht11: True if device is DHT11, otherwise DHT22.
         :param ~board.Pin pin: digital pin used for communication
