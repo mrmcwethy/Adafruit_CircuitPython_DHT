@@ -27,6 +27,15 @@ Please ensure all dependencies are available on the CircuitPython filesystem.
 This is easily achieved by downloading
 `the Adafruit library and driver bundle <https://github.com/adafruit/Adafruit_CircuitPython_Bundle>`_.
 
+.. note::
+     This library uses the `pulseio` module in CircuitPython. As of CircuitPython 7.0.0, `pulseio` is
+     no longer available on the smallest CircuitPython builds,
+     such as the Trinket M0, Gemma M0, and Feather M0 Basic boards.
+     You can substitute a more modern sensor, which will work better as well.
+     See the guide `Modern Replacements for DHT11 and DHT22 Sensors
+     <https://learn.adafruit.com/modern-replacements-for-dht11-dht22-sensors>`_
+     for suggestions.
+
 Installing from PyPI
 ====================
 
@@ -68,16 +77,21 @@ Designed specifically to work with the Adafruit DHT series sensors:
 
 
 * Please check the device datasheet for the appropriate value.
-* Be sure that you are running Buster Operating System.
+* Be sure that you are running the Buster Operating System.
 * Make sure that your user is part of the ``gpio`` group.
 
 
 Known Issues
 ------------
 
-* Library may or may not work in Linux 64-bit platforms
-* Raspberry PI-ZERO does not provide reliable readings
+* The library may or may not work in Linux 64-bit platforms.
+* The Raspberry PI Zero does not provide reliable readings.
 * Readings in FeatherS2 does not work as expected.
+
+.. note::
+     Using a more modern sensor will avoid these issues.
+     See the guide `Modern Replacements for DHT11 and DHT22 Sensors
+     <https://learn.adafruit.com/modern-replacements-for-dht11-dht22-sensors>`_.
 
 Basics
 -------
