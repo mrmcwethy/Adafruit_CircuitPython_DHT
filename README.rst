@@ -3,7 +3,7 @@ Introduction
 ============
 
 .. image:: https://readthedocs.org/projects/adafruit-circuitpython-dht/badge/?version=latest
-    :target: https://circuitpython.readthedocs.io/projects/dht/en/latest/
+    :target: https://docs.circuitpython.org/projects/dht/en/latest/
     :alt: Documentation Status
 
 
@@ -137,7 +137,7 @@ If you try again to get a result within 2 seconds, cached values are returned.
 Documentation
 =============
 
-API documentation for this library can be found on `Read the Docs <https://circuitpython.readthedocs.io/projects/dht/en/latest/>`_.
+API documentation for this library can be found on `Read the Docs <https://docs.circuitpython.org/projects/dht/en/latest/>`_.
 
 Contributing
 ============
