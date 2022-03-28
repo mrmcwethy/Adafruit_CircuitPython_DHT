@@ -51,7 +51,13 @@ __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_DHT.git"
 
 
 class DHTBase:
-    """base support for DHT11 and DHT22 devices"""
+    """base support for DHT11 and DHT22 devices
+
+    :param bool dht11: True if device is DHT11, otherwise DHT22.
+    :param ~board.Pin pin: digital pin used for communication
+    :param int trig_wait: length of time to hold trigger in LOW state (microseconds)
+    :param bool use_pulseio: False to force bitbang when pulseio available (only with Blinka)
+    """
 
     __hiLevel = 51
 
@@ -64,12 +70,6 @@ class DHTBase:
         *,
         max_pulses: int = 81
     ):
-        """
-        :param boolean dht11: True if device is DHT11, otherwise DHT22.
-        :param ~board.Pin pin: digital pin used for communication
-        :param int trig_wait: length of time to hold trigger in LOW state (microseconds)
-        :param boolean use_pulseio: False to force bitbang when pulseio available (only with Blinka)
-        """
         self._dht11 = dht11
         self._pin = pin
         self._trig_wait = trig_wait
