@@ -79,7 +79,7 @@ class DHTBase:
         self._temperature = None
         self._use_pulseio = use_pulseio
         if "Linux" not in uname() and not self._use_pulseio:
-            raise Exception("Bitbanging is not supported when using CircuitPython.")
+            raise ValueError("Bitbanging is not supported when using CircuitPython.")
         # We don't use a context because linux-based systems are sluggish
         # and we're better off having a running process
         if self._use_pulseio:
